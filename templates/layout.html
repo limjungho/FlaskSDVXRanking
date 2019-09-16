@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mainpage.css') }}">
+    <title>SDVXRanking</title>
+  </head>
+ 
+  <body>
+    <div id="NavBar">
+      <nav id="topMenu">
+        <ul>
+          <li><a href="#">Track List</a></li>
+          <li><a href="#">User Registry</a></li>
+          <li><a href="#">User Score Update</a></li>
+          <li><a href="#">About</a></li>
+        </ul>
+      </nav>
+    </div>
+    <br />
+      <!-- Main content block -->
+      {% block content %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+ 
+{% block content %}
+<div>
+      <h1>SDVX Track List</h1>
+      <div class="TrackList">
+        <table class="TrackList">
+          <th>Track Title</th>
+          <th>NOV</th>
+          <th>ADV</th>
+          <th>EXH</th>
+          <th>MXM</th>
+          <th>INF</th>
+          <th>GRV</th>
+          <th>HVN</th>
+          <th>VVD</th>
+          {% for Track in PageTrack %}
+          <tr>
+              {% for elem in Track %}
+                {% if elem == None %}
+                  <td>-</td>
+                {% else %}
+                  <td>{{elem}}</td>
+                {% endif %}
+              {% endfor %}
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+</div>
+
+<div class="pagination">
+    <a href="#">&laquo;</a>
+    {% for i in AllTrack %}
+    <a href='/?page={{loop.index}}'>{{loop.index}}</a>
+    {% endfor %}
+    <a href="#">&raquo;</a>
+</div>
+
+{% endblock %}
