@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+ 
+{% block content %}
+<div>
+      <h1>SDVX RankingPage</h1>
+      <div align="center"><img src="http://anzuinfo.me/images/track_img/{{(((tid|int)-1000)|string).zfill(4)+diff[0].lower()}}.jpg" width="300" height="300"><div>
+    
+      <div align="center"><h1>{{title}} {{diff}}</h1></div>
+      <table border="1" width=960px align="center">
+        <th>Rank</th><th>Name</th><th>Score</th><th>Grade</th><th>Complete</th>
+
+        {% for User in sortedRankList %}
+          <tr>
+            <td>{{UserNameList[loop.index0][0]}}</td>
+            <td>{{UserNameList[loop.index0][1]}}</td>
+              {% for elem in User[1:] %}
+                <td>{{elem}}</td>
+              {% endfor %}
+          </tr>
+        {% endfor %}
+
+        </table>
+{% endblock %}

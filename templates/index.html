@@ -16,9 +16,11 @@
           <th>VVD</th>
           {% for Track in PageTrack %}
           <tr>
-              {% for elem in Track %}
+              {% for elem in Track[1:] %}
                 {% if elem == None %}
                   <td>-</td>
+                {% elif elem.isdigit() %}
+                  <td><a href='/RankingPage.html?tid={{Track[0]}}&diff={{DiffList[loop.index-2]}}' target="_blank">{{elem}}</a></td>
                 {% else %}
                   <td>{{elem}}</td>
                 {% endif %}

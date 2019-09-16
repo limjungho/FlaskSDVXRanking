@@ -12,7 +12,7 @@ app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'SDVXRanking.db')
 ))
 '''
-
+DiffList = ['NOV', 'ADV', 'EXH', 'MXM', 'INF', 'GRV', 'HVN', 'VVD']
 
 @app.route('/',methods = ['GET'])
 def MainIndex():
@@ -34,13 +34,44 @@ def MainIndex():
     sql = "select * from TrackList where TrackID >= ? AND TrackID <= ?;"
     cur.execute(sql,(str(page+1),str(page+ViewPageLen)))
     PageTrack = cur.fetchall()
-    for i in range(0,len(PageTrack)):
-        PageTrack[i] = PageTrack[i][1:]
     #print(PageTrack[0])
     #sleep(500)
     conn.close()
 
-    return render_template('index.html',AllTrack=AllTrack,PageTrack=PageTrack)
+    return render_template('index.html',AllTrack=AllTrack,PageTrack=PageTrack,DiffList=DiffList)
+
+@app.route('/RankingPage.html',methods = ['GET'])
+def RenderRanking():
+    tid = request.args.get('tid')
+    diff = request.args.get('diff')
+    conn = sqlite3.connect("SDVXRanking.db")
+    cur = conn.cursor()
+
+    sql = "select UserNumber, Score, Grade, Complete from ScoreData where TrackID=? AND Difficulty=?;"
+    cur.execute(sql,(tid,diff))
+    RankList = cur.fetchall()
+    sortedRankList = sorted(RankList, key=lambda x: x[1], reverse=True)
+
+    sql = "select TrackTitle from TrackList where TrackID=?;"
+    cur.execute(sql, (tid,))
+    TrackTitle = cur.fetchone()[0]
+
+    UserNameList =[]
+
+    for rank, data in enumerate(sortedRankList):
+        sql = "select UserName from UserInfo where UserNumber = ?;"
+        cur.execute(sql, (data[0],))
+        UserName = cur.fetchone()[0]
+        UserNameList.append((rank+1,UserName))
+
+    conn.close()
+    return render_template('RankingPage.html',
+                           sortedRankList=sortedRankList,
+                           tid=tid,
+                           title=TrackTitle,
+                           diff=diff,
+                           UserNameList=UserNameList)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
