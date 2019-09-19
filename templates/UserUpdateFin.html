@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+ 
+{% block content %}
+
+	<script>
+      	alert('갱신 완료!!');
+    </script>
+    <div>
+      <h1>User Update Finished - {{updateuser}}</h1>
+    </div>
+    <br/>
+    <div id="loading">
+      <a href={{url_for('MainIndex')}}>메인으로 돌아가기</a>
+    </div>
+
+{% endblock %}

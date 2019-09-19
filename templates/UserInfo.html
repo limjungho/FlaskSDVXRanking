@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+ 
+{% block content %}
+
+<script>
+  function UpdateCheck(user){
+    if(confirm('기록 갱신을 하시겠습니까?\nID : '+ user)==true){
+      location.href='/UserUpdate.html?user='+user;
+    }
+  }
+</script>
+<div>
+      <h1>User Info</h1>
+      <div class="RankingTable">
+        <table>
+          <th>No.</th>
+          <th>anzuinfoID</th>
+          <th>SDVX NickName</th>
+          <th>Update</th>
+          {% for user in UserList %}
+          <tr>
+              {% for elem in user %}
+                <td>{{elem}}</td>
+              {% endfor %}
+              <td>
+                <input type="button" value="Update" onclick="UpdateCheck('{{user[1]}}')">
+              </td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+</div>
+<br/>
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+ 
+{% block content %}
+    <script>
+      function Updateprpr(){
+        alert('갱신 시작');
+        location.href="{{url_for('UserUpdateProcess',user=updateuser)}}";
+      }
+    </script>
+    <div>
+      <h1>User Update - {{updateuser}}</h1>
+    </div>
+    <br/>
+    <div id="loading">
+      <input type='button' value='기록 갱신하기 클릭 (갱신 시간이 대략 10초 정도 소요되니 버튼을 클릭하고 잠시만 기다려주세요)' style="width:640px; height:50px" onclick='Updateprpr()'>
+    </div>
+
+{% endblock %}

@@ -1,6 +1,4 @@
-<style>
-
-	.pagination {
+<style>	.pagination {
 	  display: inline-block;
 	  text-align: center;
 	}
@@ -21,40 +19,6 @@
 	}
 
 	.pagination a:hover:not(.active) {background-color: #ddd;}
-
-
-	.TrackList table {
-		width: 1080px;
-		border: 1px solid black;
-		margin: 5px 10px 10px 10px;
-	}
-
-	.TrackList th, td {
-		border: 1px solid black;
-	}
-
-	.RankingTable table{
-		width: 960px;
-		border: 1px solid black;
-		text-align: center;
-	}
-	.RankingTable th, td {
-		border: 1px solid black;
-	}
-
-	#loading{
-		text-align: center;
-	}
-
-	.search{
-		width:100%;
-		text-align: center;
-	}
-
-	.searchcont{
-		font-size: 20px;
-		display: inline-block;
-	}
 
 	ul {
 	  list-style-type: none;
@@ -87,4 +51,15 @@
 	h1 {
 		margin : 10px;
 	}
-</style>
+
+	.RankingTable table {
+		width: 1080px;
+		border: 1px solid black;
+		margin: 5px 10px 10px 10px;
+	}
+
+	.RankingTable th, td{
+		border: 1px solid black;
+		text-align: center;
+	}
+</sytle>

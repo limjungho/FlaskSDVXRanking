@@ -8,7 +8,7 @@
         <div class="searchcont">
           Title : 
         </div>
-        <input class="searchcont" type="text" id="title">
+        <input class="searchcont" type="text" id="title" value="{{SearchTitle}}">
         <input class="searchcont" type="button" value="search" id="searchtitle"
         onclick="search_click()">
       </div>
@@ -24,7 +24,7 @@
           <th>GRV</th>
           <th>HVN</th>
           <th>VVD</th>
-          {% for Track in PageTrack %}
+          {% for Track in SearchTrackList %}
           <tr>
               {% for elem in Track[1:] %}
                 {% if elem == None %}
@@ -42,6 +42,7 @@
 </div>
 <br/>
 
+<!--
 <div class="pagination">
     <a href="#">&laquo;</a>
     {% for i in AllTrack %}
@@ -49,6 +50,7 @@
     {% endfor %}
     <a href="#">&raquo;</a>
 </div>
+-->
 
 <script>
   function search_click() {
