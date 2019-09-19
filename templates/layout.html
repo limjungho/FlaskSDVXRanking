@@ -7,13 +7,13 @@
   </head>
  
   <body>
-    
+      <div class="topmenu">
         <ul>
           <li><a href={{url_for('MainIndex')}}>Track List</a></li>
           <li><a href="{{url_for('UserInfo')}}">User Info & Update</a></li>
           <li><a href="{{url_for('About')}}">About</a></li>
         </ul>
-
+      </div>
     <br /><br /><br />
       <!-- Main content block -->
       {% block content %}{% endblock %}

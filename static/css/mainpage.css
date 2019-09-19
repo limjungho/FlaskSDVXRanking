@@ -56,7 +56,7 @@
 		display: inline-block;
 	}
 
-	ul {
+	.topmenu ul {
 	  list-style-type: none;
 	  margin: 0;
 	  padding: 0;
@@ -68,11 +68,11 @@
 	  width: 100%;
 	}
 
-	li {
+	.topmenu li {
 	  float: left;
 	}
 
-	li a {
+	.topmenu li a {
 	  display: block;
 	  color: white;
 	  text-align: center;
@@ -80,11 +80,11 @@
 	  text-decoration: none;
 	}
 
-	li a:hover {
+	.topmenu li a:hover {
 	  background-color: #111;
 	}
 
-	h1 {
+	h1 h2 h3{
 		margin : 10px;
 	}
 </style>
