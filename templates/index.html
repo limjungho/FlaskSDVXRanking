@@ -3,16 +3,26 @@
 {% block content %}
 
 <div>
-      <h1>SDVX Track List</h1>
+      <h1 style="margin-left:10px;"><a href='{{url_for("MainIndex")}}'>SDVX Track List</a></h1>
       <div class="search">
         <div class="searchcont">
           Title : 
         </div>
         <input class="searchcont" type="text" id="title">
         <input class="searchcont" type="button" value="search" id="searchtitle"
-        onclick="search_click()">
+        onclick="SearchClick()">
       </div>
       <br/>
+      <div class="LevelSearch">
+        <select id="LevelSelect" name='LevelList' onchange="LevelSelect()">
+          <optgroup>
+            <option value='' selected>-- 레벨 선택 --</option>
+            {% for elem in range(1,21) %}
+            <option value='Lv.{{elem}}'>Lv.{{elem}}</option>
+            {% endfor %}
+          </optgroup>
+        </select>
+      </div>
       <div class="TrackList">
         <table>
           <th>Track Title</th>
@@ -30,7 +40,8 @@
                 {% if elem == None %}
                   <td>-</td>
                 {% elif elem.isdigit() %}
-                  <td><a href='/RankingPage.html?tid={{Track[0]}}&diff={{DiffList[loop.index-2]}}' target="_blank">{{elem}}</a></td>
+                  <td><a href="{{url_for('RenderRanking',tid=Track[0],diff=DiffList[loop.index-2])}}"
+                    target="_blank">{{elem}}</a></td>
                 {% else %}
                   <td>{{elem}}</td>
                 {% endif %}
@@ -45,17 +56,22 @@
 <div class="pagination">
     <a href="#">&laquo;</a>
     {% for i in AllTrack %}
-    <a href='/?page={{loop.index}}'>{{loop.index}}</a>
+    <a href='{{url_for("MainIndex",page=loop.index)}}'>{{loop.index}}</a>
     {% endfor %}
     <a href="#">&raquo;</a>
 </div>
 
 <script>
-  function search_click() {
+  function SearchClick() {
     var searchtext = document.getElementById("title").value
     //alert(encodeURIComponent(searchtext));
-   location.href='/TrackSearch?title='+encodeURIComponent(searchtext);
-  }
+   location.href='/TrackTitleSearch?title='+encodeURIComponent(searchtext);
+ }
+ function LevelSelect(){
+    var SelectedLevel = document.getElementById("LevelSelect");
+    var SelectedText = SelectedLevel.options[SelectedLevel.selectedIndex].value;
+    location.href='/TrackLevelSearch?level='+SelectedText.substr(3,);
+ }
 
   var input = document.getElementById("title");
   input.addEventListener("keyup", function(event) {

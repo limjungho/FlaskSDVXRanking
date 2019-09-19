@@ -44,7 +44,7 @@ def MainIndex():
 
     return render_template('index.html',AllTrack=AllTrack,PageTrack=PageTrack,DiffList=DiffList)
 
-@app.route('/RankingPage.html',methods = ['GET'])
+@app.route('/RankingPage',methods = ['GET'])
 def RenderRanking():
     tid = request.args.get('tid')
     diff = request.args.get('diff')
@@ -56,9 +56,10 @@ def RenderRanking():
     RankList = cur.fetchall()
     sortedRankList = sorted(RankList, key=lambda x: x[1], reverse=True)
 
-    sql = "select TrackTitle, "+diff+" from TrackList where TrackID=?;"
+    sql = "select TrackTitle, {} from TrackList where TrackID= ?;".format(diff)
     cur.execute(sql, (tid,))
     TrackTitle, TrackLv = cur.fetchone()
+    print(TrackTitle, TrackLv)
 
     UserNameList =[]
     prevRank = 1
@@ -105,8 +106,9 @@ def RenderRanking():
                            CompleteImgDict=CompleteImgDict,
                            GradeImgDict=GradeImgDict)
 
-@app.route('/TrackSearch',methods = ['GET'])
-def TrackSearch():
+@app.route('/TrackTitleSearch', methods = ['GET'])
+def TrackTitleSearch():
+    ViewPageLen=50
     SearchTitle=request.args.get('title')
     SearchTitle = urllib.parse.unquote(SearchTitle)
     conn = sqlite3.connect("SDVXRanking.db")
@@ -121,13 +123,38 @@ def TrackSearch():
     SearchTrackList = cur.fetchall()
     #print(SearchTrackList)
 
-    TrackLen = int((len(SearchTrackList) + 49) / 50)
+    TrackLen = int((len(SearchTrackList) + ViewPageLen) / ViewPageLen)
     AllTrack = range(0, TrackLen)
 
     conn.close()
     return render_template('FindTitleIndex.html',AllTrack=AllTrack,SearchTrackList=SearchTrackList,
                            DiffList=DiffList,SearchTitle=SearchTitle)
 
+@app.route('/TrackLevelSearch', methods = ['GET'])
+def TrackLevelSearch():
+    ViewPageLen = 50
+    SearchLevel = request.args.get('level')
+    if SearchLevel.isdigit() == False:
+        return redirect(url_for('MainIndex'))
+    
+    page = request.args.get('page')
+    if page is None:
+        page = 1
+    conn = sqlite3.connect("SDVXRanking.db")
+    cur = conn.cursor()
+
+    sql = """select * from TrackList where NOV=? OR ADV=? OR EXH=? OR MXM=? OR INF=? OR GRV=? OR HVN=? OR VVD=?;"""
+    leveltuple = (SearchLevel,)*8
+    cur.execute(sql,leveltuple)
+    SearchTrackList = cur.fetchall()
+    TrackLen = int((len(SearchTrackList) + ViewPageLen-1) / ViewPageLen)
+    AllTrack = range(0, TrackLen)
+
+    SearchTrackList = SearchTrackList[ViewPageLen*(int(page)-1):ViewPageLen*int(page)]
+
+    conn.close()
+    return render_template('FindLevelIndex.html',AllTrack=AllTrack,SearchTrackList=SearchTrackList,
+                           DiffList=DiffList,SearchLevel=SearchLevel)
 
 @app.route('/UserInfo.html')
 def UserInfo():
@@ -141,6 +168,7 @@ def UserInfo():
     conn.close()
 
     return render_template('UserInfo.html', UserList=UserList)
+
 
 
 @app.route('/UserUpdate.html',methods = ['GET'])

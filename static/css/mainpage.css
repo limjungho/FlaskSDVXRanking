@@ -1,5 +1,9 @@
 <style>
 
+	h1 h2 h3{
+		margin-left : 20px;
+	}
+
 	.pagination {
 	  display: inline-block;
 	  text-align: center;
@@ -37,6 +41,7 @@
 		width: 960px;
 		border: 1px solid black;
 		text-align: center;
+		margin: 5px 10px 10px 10px;
 	}
 	.RankingTable th, td {
 		border: 1px solid black;
@@ -83,8 +88,16 @@
 	.topmenu li a:hover {
 	  background-color: #111;
 	}
-
-	h1 h2 h3{
-		margin : 10px;
+	.LevelSearch optgroup{
+		font-size:16px;
 	}
+
+	.LevelSearch select{
+		margin: 5px 10px 10px 10px;
+		width: 200px;
+		height: 30px;
+		font-size:16px;
+	}
+
+
 </style>

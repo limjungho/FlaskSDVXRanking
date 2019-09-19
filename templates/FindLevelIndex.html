@@ -16,9 +16,13 @@
       <div class="LevelSearch">
         <select id="LevelSelect" name='LevelList' onchange="LevelSelect()">
           <optgroup>
-            <option value='' selected>-- 레벨 선택 --</option>
+            <option value=''>-- 레벨 선택 --</option>
             {% for elem in range(1,21) %}
-            <option value='Lv.{{elem}}'>Lv.{{elem}}</option>
+              {% if elem|string == SearchLevel %}
+                <option value='Lv.{{elem}}' selected>Lv.{{elem}}</option>
+              {% else %}
+                <option value='Lv.{{elem}}'>Lv.{{elem}}</option>
+              {% endif %}
             {% endfor %}
           </optgroup>
         </select>
@@ -40,7 +44,7 @@
                 {% if elem == None %}
                   <td>-</td>
                 {% elif elem.isdigit() %}
-                  <td><a href="{{url_for('RenderRanking',tid=Track[0],diff=DiffList[loop.index-2])}}" target="_blank">{{elem}}</a></td>
+                  <td><a href="{{url_for('RenderRanking',tid=Track[0],diff=DiffList[loop.index-2])}}"target="_blank">{{elem}}</a></td>
                 {% else %}
                   <td>{{elem}}</td>
                 {% endif %}
@@ -52,15 +56,13 @@
 </div>
 <br/>
 
-<!--
 <div class="pagination">
     <a href="#">&laquo;</a>
     {% for i in AllTrack %}
-    <a href='/?page={{loop.index}}'>{{loop.index}}</a>
+    <a href='{{url_for("TrackLevelSearch",level=SearchLevel,page=loop.index)}}'>{{loop.index}}</a>
     {% endfor %}
     <a href="#">&raquo;</a>
 </div>
--->
 
 <script>
   function SearchClick() {
@@ -73,6 +75,7 @@
     var SelectedText = SelectedLevel.options[SelectedLevel.selectedIndex].value;
     location.href='/TrackLevelSearch?level='+SelectedText.substr(3,);
  }
+
   var input = document.getElementById("title");
   input.addEventListener("keyup", function(event) {
     // Number 13 is the "Enter" key on the keyboard
