@@ -12,8 +12,20 @@
 
         {% for User in sortedRankList %}
           <tr>
-            <td>{{UserNameList[loop.index0][0]}}</td>
-            <td>{{UserNameList[loop.index0][1]}}</td>
+            {% if UserNameList[loop.index0][0] == 1 %}
+              <td><img src="{{url_for('static',filename='img/GradeCompleteImg/first.png')}}"></td>
+              <td class="first">{{UserNameList[loop.index0][1]}}</td>
+            {% elif UserNameList[loop.index0][0] == 2 %}
+              <td><img src="{{url_for('static',filename='img/GradeCompleteImg/second.png')}}"></td>
+              <td class="second">{{UserNameList[loop.index0][1]}}</td>
+            {% elif UserNameList[loop.index0][0] == 3 %}
+              <td><img src="{{url_for('static',filename='img/GradeCompleteImg/third.png')}}"></td>
+              <td class="third">{{UserNameList[loop.index0][1]}}</td>
+            {% else %}
+              <td>{{UserNameList[loop.index0][0]}}</td>
+              <td>{{UserNameList[loop.index0][1]}}</td>
+            {% endif %}
+            
             <td>{{User[1]}}</td>
             <td><img src="{{url_for('static',filename='img/GradeCompleteImg/'+GradeImgDict[User[2]])}}"></td>
             <td><img src="{{url_for('static',filename='img/GradeCompleteImg/'+CompleteImgDict[User[3]])}}"></td>

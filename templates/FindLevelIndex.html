@@ -27,32 +27,39 @@
           </optgroup>
         </select>
       </div>
-      <div class="TrackList">
-        <table>
-          <th>Track Title</th>
-          <th>NOV</th>
-          <th>ADV</th>
-          <th>EXH</th>
-          <th>MXM</th>
-          <th>INF</th>
-          <th>GRV</th>
-          <th>HVN</th>
-          <th>VVD</th>
-          {% for Track in SearchTrackList %}
-          <tr>
-              {% for elem in Track[1:] %}
-                {% if elem == None %}
-                  <td>-</td>
-                {% elif elem.isdigit() %}
-                  <td><a href="{{url_for('RenderRanking',tid=Track[0],diff=DiffList[loop.index-2])}}"target="_blank">{{elem}}</a></td>
-                {% else %}
-                  <td>{{elem}}</td>
-                {% endif %}
-              {% endfor %}
-          </tr>
-          {% endfor %}
-        </table>
-      </div>
+      {% for Track in SearchTrackList %}
+      <table class="TrackBox">
+        <tr>
+          <td class="ImgBox" rowspan='2'><img class="img" src="http://anzuinfo.me/images/track_img/{{(((Track[3]|int)-1000)|string).zfill(4)+'e'}}.jpg"></td>
+          <td class="TitleBox" colspan='4'>
+            {% if Track[0]|length > 40 %}
+            <div id="TrackTitle">{{Track[0][:40]}}...</div>
+            {% else %}
+            <div id="TrackTitle">{{Track[0]}}</div>
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+            <td class="DiffBoxEXH1"><div id="rcornersEXH1" 
+              onclick="RankingSelect({{Track[3]}},'EXH')">
+            {% if Track[1]|length == 1 %}
+            EXH Lv.{{Track[1]}}&nbsp;
+            {% else %}
+            EXH Lv.{{Track[1]}}
+            {% endif %}
+            </a></div></td>
+            <td class="DiffBoxEXH2"><div id="rcornersEXH2" 
+              onclick="RankingSelect({{Track[3]}},'EXH')">{{Track[5]}}</div></td></a>
+            {% if Track[2] != '??' %}
+            <td class="DiffBoxMXM2"><div id="rcorners{{Track[4]}}2" 
+              onclick="RankingSelect({{Track[3]}},'{{Track[4]}}')">{{Track[6]}}</div></td>
+            <td class="DiffBoxMXM1"><div id="rcorners{{Track[4]}}1" 
+              onclick="RankingSelect({{Track[3]}},'{{Track[4]}}')">{{Track[4]}} Lv.{{Track[2]}}</div></td>
+            
+            {% endif %}
+      </table>
+      <br/>
+      {% endfor %}
 </div>
 <br/>
 
@@ -74,6 +81,9 @@
     var SelectedLevel = document.getElementById("LevelSelect");
     var SelectedText = SelectedLevel.options[SelectedLevel.selectedIndex].value;
     location.href='/TrackLevelSearch?level='+SelectedText.substr(3,);
+ }
+function RankingSelect(tid, diff){
+    location.href="/RankingPage?tid="+tid+"&diff="+diff;
  }
 
   var input = document.getElementById("title");

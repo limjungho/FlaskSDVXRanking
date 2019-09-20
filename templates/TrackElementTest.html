@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mainpage.css') }}">
+    <title>SDVXRanking</title>
+    <style>
+      .TrackBox {
+        display: inline-block;
+        border: 3px solid #aaaaaa;
+        width: auto;
+        height: auto;
+        table-layout: fixed;
+        overflow: hidden;
+        border-collapse: collapse;
+        background-color: white;
+        border-spacing:0px;
+      }
+      .img{
+        width:100px;
+        height:100px;
+        display: block;
+      }
+      #TrackTitle {
+        background: white;
+        border: 5px solid #742f80;
+        width: 520px;
+        height: 26px;
+        border-radius: 10px;
+        padding:5px 5px 5px 15px;
+        font-size:19px;
+        font-weight: bold;
+      }
+
+      #rcornersEXH1{
+        background: #ff0000;
+        width: auto;
+        height: auto;
+        border-radius: 10px 0px 0px 10px;
+        padding:5px 15px 5px 15px;
+        font-size:19px;
+        font-weight: bold;
+        color: white;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+      }
+
+      #rcornersEXH2{
+        background: #ff0000;
+        width: auto;
+        height: auto;
+        border-radius: 0px 10px 10px 0px;
+        padding:5px 25px 5px 15px;
+        font-size:19px;
+        font-weight: bold;
+        color: white;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+      }
+
+      #rcornersMXM1{
+        background: #808080;
+        width: auto;
+        height: auto;
+        border-radius: 10px 0px 0px 10px;
+        padding:5px 15px 5px 15px;
+        font-size:19px;
+        font-weight: bold;
+        color: white;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+      }
+
+      #rcornersMXM2{
+        background: #808080;
+        width: auto;
+        height: auto;
+        border-radius: 0px 10px 10px 0px;
+        padding:5px 15px 5px 15px;
+        font-size:19px;
+        font-weight: bold;
+        color: white;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+      }
+
+      .DiffBoxEXH1{
+        padding: 0px 0px 0px 10px;
+        float: left;
+      }
+      .DiffBoxEXH2{
+        padding: 0px 0px 0px 2px;
+        float: left;
+      }
+
+      .DiffBoxMXM2{
+        padding: 0px 10px 0px 0px;
+        float: right;
+      }
+
+      .DiffBoxMXM1{
+        padding: 0px 2px 0px 0px;
+        float: right;
+      }
+
+
+      .TitleBox{
+        padding:3px 10px 3px 10px;
+      }
+      .ImgBox{
+        padding:0;
+        border-right:3px solid #aaaaaa;
+      }
+
+    </style>
+  </head>
+ 
+  <body>
+      <table class="TrackBox">
+        <tr>
+          <td class="ImgBox" rowspan='2'><img class="img" src="http://anzuinfo.me/images/track_img/1400m.jpg"></td>
+          <td class="TitleBox" colspan='4'>
+            <div id="TrackTitle">LegenD.</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="DiffBoxEXH1"><div id="rcornersEXH1">EXH Lv.16</div></td>
+          <td class="DiffBoxEXH2"><div id="rcornersEXH2">WF.HOWLS</div></td>
+          <td class="DiffBoxMXM2"><div id="rcornersMXM2">WF.HOWLS</div></td>
+          <td class="DiffBoxMXM1"><div id="rcornersMXM1">MXM Lv.18</td>
+      </table>
+
+  </body>
+</html>

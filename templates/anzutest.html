@@ -1,0 +1,113 @@
+
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>SDVX AnzuInfo</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="./css/base.css?ver=190110">
+	<link rel="stylesheet" type="text/css" href="./css/trackData.css?ver=190823">
+</head>
+<body>
+
+	<header>
+		<h1>
+		<a href="/">SDVX AnzuInfo</a>
+		</h1>
+		<span class=navOpen onclick="openNav()"></span>
+	</header>
+
+	<nav class=sideNav>
+		<link rel="stylesheet" type="text/css" href="./css/navigator.css?ver=180902">
+<script>
+	var isNavOpen = false;
+	function openNav()
+	{
+		$("nav").css('right', '0px');
+		isNavOpen = true;
+	}
+	function closeNav()
+	{
+		$("nav").css('right', '-400px');
+		isNavOpen = false;
+	}
+	function openScore()
+	{
+		$("#nav_score").slideToggle();
+	}
+	function openTrack()
+	{
+		$("#nav_track").slideToggle();
+	}
+	function openUnlock()
+	{
+		$("#nav_unlock").slideToggle();
+	}
+</script>
+<div id="navTitle">메뉴</div>
+<div class=n_name>howlingsoul님</div>
+<div id='n_login' onclick="window.location.href='./logout.php'" class=n_button>로그아웃</div>
+<div onclick="window.location.href='./profile.html'" class='n_menu n_firstmenu'>내 정보</div>
+<div onclick="openScore()" class=n_menu>내 스코어</div>
+<div id=nav_score style="display:none;">
+<div onclick="window.location.href='./myScore.html'" class=s_menu>스코어 보기(이미지)</div>
+<div onclick="window.location.href='./myScoreText.html'" class=s_menu>스코어 보기(텍스트)</div>
+<div onclick="window.location.href='./compare.html'" class=s_menu>스코어 비교</div>
+<div onclick="window.location.href='./myForce.html'" class=s_menu>볼포스 관리</div>
+<div onclick="window.location.href='./renewal.html'" class=s_menu>갱신하기</div>
+</div>
+<div onclick="openTrack()" class=n_menu>보면 정보</div>
+<div id=nav_track style="display:none;">
+<div onclick="window.location.href='./tracks.html'" class=s_menu>보면 검색</div>
+<div onclick="window.location.href='./table.html'" class=s_menu>클리어 서열표</div>
+<div onclick="window.location.href='./tableMake.html'" class=s_menu>서열표 제작 툴</div>
+<div onclick="window.location.href='./skill.html'" class=s_menu>SKILL ANALYZER</div>
+</div>
+<div onclick="openUnlock()" class=n_menu>해금</div>
+<div id=nav_unlock style="display:none;">
+<div onclick="window.location.href='./unlock.html'" class=s_menu>조건부 해금</div>
+<div onclick="window.location.href='./blaster.html'" class=s_menu>BLASTER GATE</div>
+<div onclick="window.location.href='./special.html'" class='s_menu s_text'>ΩDimension/POLICY BREAK/특수해금</div>
+</div>
+
+<div id="n_close" onclick="closeNav()" class="n_button">닫기</div>	</nav>
+
+	<section class=mainArticle>
+	<div class=mainBox>
+		<h2>보면 정보</h2>
+		<table class=trackData>
+		<tr><td colspan=3 class=image><img src=/images/track_img/1413m.jpg></td></tr><tr><td colspan=2 class=title>voltississimo</td><td rowspan=2 class=level><div class='lv mxm'>19</div></td></tr><tr><td colspan=2 class=artist>BEMANI Sound Team "PHQUASE"</td></tr><tr><td class=row>Effected by</td><td colspan=2 class=cont>～PHPHPH～</td></tr><tr><td class=row>Illustrated by</td><td colspan=2 class=cont>蒼弐</td></tr><tr><td class=row>해금 방법</td><td colspan=2 class=cont>-</td></tr>		</table>
+		<br><br>
+		<h2>서열</h2>
+		<table class=rank_table>
+			<thead><tr>
+				<th class=rank_star>총 난이도</th>
+				<th class=rank_note>노트</th>
+				<th class=rank_knob>노브</th>
+				<th class=rank_density>밀도</th>
+				<th class=rank_hand>손배치</th>
+				<th class=rank_soflan>변속</th>
+			</tr></thead><tr>
+		<td colspan=6>미분류</td>		</tr></table>
+		<br><br>
+		<h2>내 점수</h2>
+		<table class=myScore>
+			<thead><tr>
+				<th class=my_title>곡 명</th>
+				<th class=my_comp>클리어</th>
+				<th class=my_rank>랭크</th>
+				<th class=my_score>점수</th>
+				<th class=my_force>볼포스</th>
+			</tr></thead>
+		<tr><td>voltississimo</td><td></td><td>D</td><td></td><td></td></tr>		</table>
+		<br><br>
+		<h2>볼포스별 평균</h2>
+
+		<!--
+		<table class=avgTable>
+				</table>
+	-->
+	</div>
+	</section>
+
+</body>
+</html>

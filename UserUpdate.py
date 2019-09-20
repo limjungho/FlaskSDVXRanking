@@ -2,6 +2,7 @@ from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 import sqlite3
 from time import sleep
+import random
 import sys
 
 class SDVXTrack:
@@ -125,3 +126,60 @@ def UserUpdateProc(AnzuID):
     conn.commit()
 
     conn.close()
+
+DiffList = ['NOV', 'ADV', 'EXH', 'MXM', 'INF', 'GRV', 'HVN', 'VVD']
+
+def TrackRendering(PageTrack):
+    conn = sqlite3.connect("SDVXRanking.db")
+    cur = conn.cursor()
+
+    NewPageTrack = []
+
+    for track in PageTrack:
+        MXMLv = '??'
+        RealDiff='??'
+        for i in range(5,10):
+            if track[i] is not None:
+                MXMLv = track[i]
+                RealDiff=DiffList[i-2]
+        EXHtop = 'WF.XXXXX'
+        MXMtop = 'WF.XXXXX'
+        sql = "select UserNumber, Score from ScoreData where TrackID=? AND Difficulty=?;"
+        cur.execute(sql, (track[0],'EXH'))
+        UserEXHList = cur.fetchall()
+        EXHtopList=[]
+        MXMtopList=[]
+        if UserEXHList:
+            sortedEXHList = sorted(UserEXHList, key=lambda x: x[1], reverse=True)
+            EXHtopList.append(sortedEXHList[0][0])
+            for i in range(1,len(sortedEXHList)):
+                if sortedEXHList[i][1] == sortedEXHList[i-1][1]:
+                    EXHtopList.append(sortedEXHList[i][0])
+                else:
+                    break
+            EXHtop = random.choice(EXHtopList)
+            sql = "select UserName from UserInfo where UserNumber = ?;"
+            cur.execute(sql, (EXHtop,))
+            EXHtop = cur.fetchone()[0]
+        if MXMLv is not '??':
+            sql = "select UserNumber, Score from ScoreData where TrackID=? AND Difficulty=?;"
+            cur.execute(sql, (track[0], RealDiff))
+            UserMXMList = cur.fetchall()
+            if UserMXMList:
+                sortedMXMList = sorted(UserMXMList, key=lambda x: x[1], reverse=True)
+                MXMtopList.append(sortedMXMList[0][0])
+                for i in range(1, len(sortedMXMList)):
+                    if sortedMXMList[i][1] == sortedMXMList[i - 1][1]:
+                        MXMtopList.append(sortedMXMList[i][0])
+                    else:
+                        break
+                MXMtop = random.choice(MXMtopList)
+                sql = "select UserName from UserInfo where UserNumber = ?;"
+                cur.execute(sql, (MXMtop,))
+                MXMtop = cur.fetchone()[0]
+
+        NewPageTrack.append((track[1], track[4], MXMLv, track[0],RealDiff,EXHtop,MXMtop))
+
+    conn.close()
+
+    return NewPageTrack

@@ -4,6 +4,20 @@
 		margin-left : 20px;
 	}
 
+	.first {
+		font-size:20px;
+		font-weight:bold;
+	}
+	.second {
+		font-size:18px;
+		font-weight:bold;
+	}
+
+	.third {
+		font-size:16px;
+		font-weight:bold;
+	}
+
 	.pagination {
 	  display: inline-block;
 	  text-align: center;
@@ -98,6 +112,154 @@
 		height: 30px;
 		font-size:16px;
 	}
+
+	.TrackBox {
+		margin-left:10px;
+        display: inline-block;
+        border: 3px solid #808080;
+        width: auto;
+        height: auto;
+        table-layout: fixed;
+        overflow: hidden;
+        border-collapse: collapse;
+        background-color: white;
+        border-spacing:0px;
+      }
+      .img{
+        width:100px;
+        height:100px;
+        display: block;
+      }
+      #TrackTitle {
+        background: white;
+        border: 5px solid #a0a0a0;
+        width: 520px;
+        height: 26px;
+        border-radius: 10px;
+        padding:5px 5px 5px 15px;
+        font-size:19px;
+        font-weight: bold;
+      }
+
+      #rcornersEXH1{
+        background: #ff0000;
+        width: auto;
+        height: auto;
+        border-radius: 10px 0px 0px 10px;
+        padding:5px 15px 5px 15px;
+        font-size:19px;
+        font-weight: bold;
+        color: white;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+        cursor: pointer;
+      }
+
+      #rcornersEXH2{
+        background: #ff0000;
+        width: 100px;
+        height: auto;
+        border-radius: 0px 10px 10px 0px;
+        padding:5px 25px 5px 15px;
+        font-size:19px;
+        font-weight: bold;
+        color: white;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+        cursor: pointer;
+      }
+
+      #rcornersMXM1, #rcornersINF1, #rcornersGRV1, #rcornersHVN1, #rcornersVVD1{
+        width: auto;
+        height: auto;
+        border-radius: 10px 0px 0px 10px;
+        padding:5px 15px 5px 15px;
+        font-size:19px;
+        font-weight: bold;
+        color: white;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+        cursor: pointer;
+      }
+      #rcornersMXM1{
+      	background : #808080;
+      }
+      #rcornersINF1{
+      	background : #FF00FF;
+      }
+      #rcornersGRV1{
+      	background : #E5720A;
+      }
+      #rcornersHVN1{
+      	background : #009AFF;
+      }
+      #rcornersVVD1{
+      	background : #F82374;
+      }
+
+      #rcornersMXM2, #rcornersINF2, #rcornersGRV2, #rcornersHVN2, #rcornersVVD2{
+        width: 100px;
+        height: auto;
+        border-radius: 0px 10px 10px 0px;
+        padding:5px 25px 5px 15px;
+        font-size:19px;
+        font-weight: bold;
+        color: white;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+        cursor: pointer;
+      }
+      #rcornersMXM2{
+      	background : #808080;
+      }
+      #rcornersINF2{
+      	background : #FF00FF;
+      }
+      #rcornersGRV2{
+      	background : #E5720A;
+      }
+      #rcornersHVN2{
+      	background : #009AFF;
+      }
+      #rcornersVVD2{
+      	background : #F82374;
+      }
+
+      .DiffBoxEXH1{
+        padding: 0px 0px 0px 10px;
+        float: left;
+        border: none;
+      }
+      .DiffBoxEXH1 a{
+      	display:block;
+    　	width:100%;
+      	height:100%;
+      	text-decoration:none;
+      	color : #ffffff;
+      }
+      .DiffBoxEXH2{
+        padding: 0px 0px 0px 2px;
+        float: left;
+        border: none;
+      }
+
+      .DiffBoxMXM1{
+        padding: 0px 2px 0px 0px;
+        float: right;
+        border: none;
+      }
+
+      .DiffBoxMXM2{
+        padding: 0px 10px 0px 0px;
+        float: right;
+        border: none;
+      }
+
+
+      .TitleBox{
+        padding:3px 10px 3px 10px;
+        border: none;
+      }
+      .ImgBox{
+        padding:0;
+        border-right:3px solid #808080;
+      }
 
 
 </style>

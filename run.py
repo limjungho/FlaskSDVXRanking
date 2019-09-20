@@ -3,7 +3,7 @@ from threading import Thread
 from time import sleep
 from flask import Flask, render_template, current_app, g, request, redirect, url_for
 import sqlite3
-from UserUpdate import UserUpdateProc
+from UserUpdate import UserUpdateProc, TrackRendering
 import urllib.parse
 
 
@@ -20,7 +20,7 @@ DiffList = ['NOV', 'ADV', 'EXH', 'MXM', 'INF', 'GRV', 'HVN', 'VVD']
 
 @app.route('/',methods = ['GET'])
 def MainIndex():
-    ViewPageLen = 50
+    ViewPageLen = 40
     page = request.args.get('page')
     if page == None:
         page = 1
@@ -32,17 +32,21 @@ def MainIndex():
     sql = "select * from TrackList"
     cur.execute(sql)
     rows = cur.fetchall()
-    TrackLen = int((len(rows) + 49) / 50)
+    TrackLen = int((len(rows) + ViewPageLen - 1) / ViewPageLen)
     AllTrack = range(0, TrackLen)
 
     sql = "select * from TrackList where TrackID >= ? AND TrackID <= ?;"
     cur.execute(sql,(str(page+1),str(page+ViewPageLen)))
     PageTrack = cur.fetchall()
-    #print(PageTrack[0])
-    #sleep(500)
+
     conn.close()
 
-    return render_template('index.html',AllTrack=AllTrack,PageTrack=PageTrack,DiffList=DiffList)
+    NewPageTrack = TrackRendering(PageTrack)
+
+    #print(PageTrack[0])
+    #sleep(500)
+
+    return render_template('index.html',AllTrack=AllTrack,PageTrack=NewPageTrack,DiffList=DiffList)
 
 @app.route('/RankingPage',methods = ['GET'])
 def RenderRanking():
@@ -59,7 +63,6 @@ def RenderRanking():
     sql = "select TrackTitle, {} from TrackList where TrackID= ?;".format(diff)
     cur.execute(sql, (tid,))
     TrackTitle, TrackLv = cur.fetchone()
-    print(TrackTitle, TrackLv)
 
     UserNameList =[]
     prevRank = 1
@@ -108,9 +111,14 @@ def RenderRanking():
 
 @app.route('/TrackTitleSearch', methods = ['GET'])
 def TrackTitleSearch():
-    ViewPageLen=50
+    ViewPageLen=40
     SearchTitle=request.args.get('title')
     SearchTitle = urllib.parse.unquote(SearchTitle)
+
+    page = request.args.get('page')
+    if page is None:
+        page = 1
+
     conn = sqlite3.connect("SDVXRanking.db")
     cur = conn.cursor()
     newSearchTitle = SearchTitle
@@ -123,20 +131,23 @@ def TrackTitleSearch():
     SearchTrackList = cur.fetchall()
     #print(SearchTrackList)
 
+    newSearchTrackList = TrackRendering(SearchTrackList)
+    newSearchTrackList = newSearchTrackList[ViewPageLen * (int(page) - 1):ViewPageLen * int(page)]
+
     TrackLen = int((len(SearchTrackList) + ViewPageLen) / ViewPageLen)
     AllTrack = range(0, TrackLen)
 
     conn.close()
-    return render_template('FindTitleIndex.html',AllTrack=AllTrack,SearchTrackList=SearchTrackList,
+    return render_template('FindTitleIndex.html',AllTrack=AllTrack,SearchTrackList=newSearchTrackList,
                            DiffList=DiffList,SearchTitle=SearchTitle)
 
 @app.route('/TrackLevelSearch', methods = ['GET'])
 def TrackLevelSearch():
-    ViewPageLen = 50
+    ViewPageLen = 40
     SearchLevel = request.args.get('level')
     if SearchLevel.isdigit() == False:
         return redirect(url_for('MainIndex'))
-    
+
     page = request.args.get('page')
     if page is None:
         page = 1
@@ -147,13 +158,16 @@ def TrackLevelSearch():
     leveltuple = (SearchLevel,)*8
     cur.execute(sql,leveltuple)
     SearchTrackList = cur.fetchall()
+
+    newSearchTrackList = TrackRendering(SearchTrackList)
+
     TrackLen = int((len(SearchTrackList) + ViewPageLen-1) / ViewPageLen)
     AllTrack = range(0, TrackLen)
 
-    SearchTrackList = SearchTrackList[ViewPageLen*(int(page)-1):ViewPageLen*int(page)]
+    newSearchTrackList = newSearchTrackList[ViewPageLen*(int(page)-1):ViewPageLen*int(page)]
 
     conn.close()
-    return render_template('FindLevelIndex.html',AllTrack=AllTrack,SearchTrackList=SearchTrackList,
+    return render_template('FindLevelIndex.html',AllTrack=AllTrack,SearchTrackList=newSearchTrackList,
                            DiffList=DiffList,SearchLevel=SearchLevel)
 
 @app.route('/UserInfo.html')
