@@ -133,7 +133,7 @@
       #TrackTitle {
         background: white;
         border: 5px solid #a0a0a0;
-        width: 520px;
+        width: 530px;
         height: 26px;
         border-radius: 10px;
         padding:5px 5px 5px 15px;
@@ -142,7 +142,7 @@
       }
 
       #rcornersEXH1{
-        background: #ff0000;
+        background: #DD0000;
         width: auto;
         height: auto;
         border-radius: 10px 0px 0px 10px;
@@ -155,8 +155,8 @@
       }
 
       #rcornersEXH2{
-        background: #ff0000;
-        width: 100px;
+        background: #EE0000;
+        width: 105px;
         height: auto;
         border-radius: 0px 10px 10px 0px;
         padding:5px 25px 5px 15px;
@@ -179,23 +179,23 @@
         cursor: pointer;
       }
       #rcornersMXM1{
-      	background : #808080;
+      	background : #707070;
       }
       #rcornersINF1{
-      	background : #FF00FF;
+      	background : #CC00CC;
       }
       #rcornersGRV1{
-      	background : #E5720A;
+      	background : #C25005;
       }
       #rcornersHVN1{
-      	background : #009AFF;
+      	background : #0067CC;
       }
       #rcornersVVD1{
-      	background : #F82374;
+      	background : #C50141;
       }
 
       #rcornersMXM2, #rcornersINF2, #rcornersGRV2, #rcornersHVN2, #rcornersVVD2{
-        width: 100px;
+        width: 105px;
         height: auto;
         border-radius: 0px 10px 10px 0px;
         padding:5px 25px 5px 15px;
@@ -209,16 +209,16 @@
       	background : #808080;
       }
       #rcornersINF2{
-      	background : #FF00FF;
+      	background : #DD00DD;
       }
       #rcornersGRV2{
-      	background : #E5720A;
+      	background : #D4600A;
       }
       #rcornersHVN2{
-      	background : #009AFF;
+      	background : #0078DD;
       }
       #rcornersVVD2{
-      	background : #F82374;
+      	background : #D60152;
       }
 
       .DiffBoxEXH1{
