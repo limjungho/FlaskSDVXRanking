@@ -24,7 +24,7 @@ def MainIndex():
     page = request.args.get('page')
     if page == None:
         page = 1
-    page = 1000+(int(page)-1)*ViewPageLen
+    tidpage = 1000+(int(page)-1)*ViewPageLen
 
     conn = sqlite3.connect("SDVXRanking.db")
     cur = conn.cursor()
@@ -36,7 +36,7 @@ def MainIndex():
     AllTrack = range(0, TrackLen)
 
     sql = "select * from TrackList where TrackID >= ? AND TrackID <= ?;"
-    cur.execute(sql,(str(page+1),str(page+ViewPageLen)))
+    cur.execute(sql,(str(tidpage+1),str(tidpage+ViewPageLen)))
     PageTrack = cur.fetchall()
 
     conn.close()
@@ -46,7 +46,7 @@ def MainIndex():
     #print(PageTrack[0])
     #sleep(500)
 
-    return render_template('index.html',AllTrack=AllTrack,PageTrack=NewPageTrack,DiffList=DiffList)
+    return render_template('index.html',AllTrack=AllTrack,PageTrack=NewPageTrack,DiffList=DiffList,page=page)
 
 @app.route('/RankingPage',methods = ['GET'])
 def RenderRanking():
@@ -139,7 +139,7 @@ def TrackTitleSearch():
 
     conn.close()
     return render_template('FindTitleIndex.html',AllTrack=AllTrack,SearchTrackList=newSearchTrackList,
-                           DiffList=DiffList,SearchTitle=SearchTitle)
+                           DiffList=DiffList,SearchTitle=SearchTitle,page=page)
 
 @app.route('/TrackLevelSearch', methods = ['GET'])
 def TrackLevelSearch():
@@ -168,7 +168,7 @@ def TrackLevelSearch():
 
     conn.close()
     return render_template('FindLevelIndex.html',AllTrack=AllTrack,SearchTrackList=newSearchTrackList,
-                           DiffList=DiffList,SearchLevel=SearchLevel)
+                           DiffList=DiffList,SearchLevel=SearchLevel,page=page)
 
 @app.route('/UserInfo.html')
 def UserInfo():

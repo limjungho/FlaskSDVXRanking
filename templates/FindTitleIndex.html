@@ -28,9 +28,9 @@
       <table class="TrackBox">
         <tr>
           {% if Track[2] != '??' %}
-          <td class="ImgBox" rowspan='2'><img class="img" src="http://anzuinfo.me/images/track_img/{{(((Track[3]|int)-1000)|string).zfill(4)+Track[4][0].lower()}}.jpg"></td>
+          <td class="ImgBox" rowspan='2'><img class="img" src="{{url_for('static',filename='img/Jacket/'+(((Track[3]|int)-1000)|string).zfill(4)+Track[4][0].lower()+'.jpg')}}"></td>
           {% else %}
-          <td class="ImgBox" rowspan='2'><img class="img" src="http://anzuinfo.me/images/track_img/{{(((Track[3]|int)-1000)|string).zfill(4)+'e'}}.jpg"></td>
+          <td class="ImgBox" rowspan='2'><img class="img" src="{{url_for('static',filename='img/Jacket/'+(((Track[3]|int)-1000)|string).zfill(4)+'e.jpg')}}"></td>
           {% endif %}
           <td class="TitleBox" colspan='4'>
             {% if Track[0]|length > 40 %}
@@ -66,11 +66,13 @@
 <br/>
 
 <div class="pagination">
-    <a href="#">&laquo;</a>
     {% for i in AllTrack %}
+    {% if loop.index|int == page|int %}
+    <a href='{{url_for("TrackTitleSearch",title=SearchTitle,page=loop.index)}}' class="active">{{loop.index}}</a>
+    {% else %}
     <a href='{{url_for("TrackTitleSearch",title=SearchTitle,page=loop.index)}}'>{{loop.index}}</a>
+    {% endif %}
     {% endfor %}
-    <a href="#">&raquo;</a>
 </div>
 
 

@@ -3,7 +3,7 @@
 {% block content %}
 <div>
       <h1>SDVX RankingPage</h1>
-      <div align="center"><img src="http://anzuinfo.me/images/track_img/{{(((tid|int)-1000)|string).zfill(4)+diff[0].lower()}}.jpg" width="300" height="300"><div>
+      <div align="center"><img src="{{url_for('static',filename='img/Jacket/'+(((tid|int)-1000)|string).zfill(4)+diff[0].lower()+'.jpg')}}" width="300" height="300"><div>
     
       <div align="center"><h1>{{title}} {{diff}} Lv.{{TrackLv}}</h1></div>
       <div class="RankingTable">
