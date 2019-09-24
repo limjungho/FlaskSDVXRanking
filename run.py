@@ -4,6 +4,7 @@ from time import sleep
 from flask import Flask, render_template, current_app, g, request, redirect, url_for
 import sqlite3
 from UserUpdate import UserUpdateProc, TrackRendering
+from UserRankingUpdate import UpdateRanking
 import urllib.parse
 
 
@@ -170,8 +171,45 @@ def TrackLevelSearch():
     return render_template('FindLevelIndex.html',AllTrack=AllTrack,SearchTrackList=newSearchTrackList,
                            DiffList=DiffList,SearchLevel=SearchLevel,page=page)
 
-@app.route('/UserInfo.html')
-def UserInfo():
+@app.route('/UserRanking', methods = ['GET'])
+def UserRanking():
+
+    RankList = []
+    typ = request.args.get('type')
+    if typ is None:
+        typ = '0'
+    if typ == '1':
+        RankList = EvalRankList('PUCCount')
+    elif typ == '2':
+        RankList = EvalRankList('PUCEXHupperCount')
+    elif typ == '3':
+        RankList = EvalRankList('FirstRankCount')
+
+    return render_template('UserRanking.html', RankList=RankList, type=typ)
+
+def EvalRankList(rankfactor):
+    conn = sqlite3.connect("SDVXRanking.db")
+    cur = conn.cursor()
+
+    sql = "select UserName, "+rankfactor+" from UserInfo;"
+    cur.execute(sql)
+    UserList = cur.fetchall()
+    sortedList = sorted(UserList, key=lambda x: x[1], reverse=True)
+    RankList = []
+    RankList.append((1, sortedList[0][0], sortedList[0][1]))
+    prevRank = 1
+    prevUser = sortedList[0][1]
+    for rnk, user in enumerate(sortedList[1:]):
+        if prevUser == user[1]:
+            RankList.append((prevRank, user[0], user[1]))
+        else:
+            prevRank = rnk + 2
+            prevUser = user[1]
+            RankList.append((prevRank, user[0], user[1]))
+    return RankList
+
+@app.route('/UserInfoUpdate')
+def UserInfoUpdate():
     conn = sqlite3.connect("SDVXRanking.db")
     cur = conn.cursor()
 
@@ -181,11 +219,11 @@ def UserInfo():
 
     conn.close()
 
-    return render_template('UserInfo.html', UserList=UserList)
+    return render_template('UserInfoUpdate.html', UserList=UserList)
 
 
 
-@app.route('/UserUpdate.html',methods = ['GET'])
+@app.route('/UserUpdate',methods = ['GET'])
 def UserUpdate():
     updateuser = request.args.get('user')
     LoadingProc = "Loading..."
@@ -195,6 +233,7 @@ def UserUpdate():
 def UserUpdateProcess():
     updateuser = request.args.get('user')
     UserUpdateProc(updateuser)
+    UpdateRanking(updateuser)
     LoadingProc = "Finished!!"
     return render_template('UserUpdateFin.html', updateuser=updateuser, LoadingProc=LoadingProc)
 

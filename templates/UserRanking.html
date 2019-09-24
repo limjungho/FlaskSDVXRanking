@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+ 
+{% block content %}
+
+<div>
+      <h1 style="margin-left:10px;">User Ranking</h1>
+</div>
+<table>
+  <tr>
+    <td><div onclick="RankingType('1')">난이도 전체 PUC 개수 Ranking</div></td>
+    <td><div onclick="RankingType('2')">EXH 이상 난이도 PUC 개수 Ranking</div></td>
+    <td><div onclick="RankingType('3')">곡 점수랭킹 1위 달성 횟수 Ranking</div></td>
+  </tr>
+
+  {% if type|int>=1 and type|int<=3 %}
+    <div class="RankingTable">
+        <table>
+          <th>Rank</th>
+          <th>SDVX NickName</th>
+          <th>PUC 개수</th>
+          {% for user in RankList %}
+          <tr>
+              {% for elem in user %}
+                <td>{{elem}}</td>
+              {% endfor %}
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    {% endif %}
+</table>
+<br/>
+
+<script>
+   function RankingType(typ){
+    location.href="/UserRanking?type="+typ;
+ }
+</script>
+{% endblock %}
