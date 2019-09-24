@@ -2,9 +2,13 @@ import sqlite3
 from time import sleep
 
 def UpdateRanking(AnzuID):
-    UserCount = 19
     conn = sqlite3.connect("SDVXRanking.db")
     cur = conn.cursor()
+
+    sql = "select UserNumber from UserInfo;"
+    cur.execute(sql)
+    UserList = cur.fetchall()
+    UserCount = len(UserList)
 
     sql = "select UserNumber from UserInfo where UserID = ?;"
     cur.execute(sql, (AnzuID,))
@@ -26,27 +30,35 @@ def UpdateRanking(AnzuID):
     sql = "update UserInfo SET PUCEXHupperCount = ? where UserNumber=?;"
     cur.execute(sql, (PUCCount, UserNum))
 
+    conn.commit()
+    conn.close()
+
+def UpdateFirstRanking():
     DiffList = ['EXH', 'MXM', 'INF', 'GRV', 'HVN', 'VVD']
 
-    sql = "update UserInfo SET FirstRankCount=0;"
+    conn = sqlite3.connect("SDVXRanking.db")
+    cur = conn.cursor()
+
+    sql = "select UserNumber from UserInfo;"
     cur.execute(sql)
-    conn.commit()
+    UserList = cur.fetchall()
+    UserCount = len(UserList)
 
     sql = "select TrackID from TrackList;"
     cur.execute(sql)
     TrackList = cur.fetchall()
-    FirstRankList = [0]*(UserCount+1)
+    FirstRankList = [0] * (UserCount + 1)
     for tidtup in TrackList:
         tid = tidtup[0]
-        if tid%20==0:
+
+        if tid % 100 == 0:
             print(tid)
+
         for diff in DiffList:
             topList = []
             sql = "select UserNumber, Score from ScoreData where TrackID = ? AND Difficulty = ?;"
-            cur.execute(sql,(tid,diff))
+            cur.execute(sql, (tid, diff))
             UserList = cur.fetchall()
-            UserList = []
-
             if not UserList:
                 continue
             sortedUserList = sorted(UserList, key=lambda x: x[1], reverse=True)
@@ -57,18 +69,24 @@ def UpdateRanking(AnzuID):
                 else:
                     break
             for user in topList:
-                FirstRankList[int(user)]=FirstRankList[int(user)]+1
-
+                FirstRankList[int(user)] = FirstRankList[int(user)] + 1
     for i, firstcount in enumerate(FirstRankList[1:]):
         sql = "update UserInfo SET FirstRankCount=? where UserNumber=?;"
-        cur.execute(sql, (firstcount,i+1))
+        cur.execute(sql, (firstcount, i + 1))
 
     conn.commit()
     conn.close()
 
+'''
+conn = sqlite3.connect("SDVXRanking.db")
+cur = conn.cursor()
 
-for i in range(1,20):
-    print('Loading...'+str(i))
+sql = "select UserNumber from UserInfo;"
+cur.execute(sql)
+UserList = cur.fetchall()
+UserCount = len(UserList)
+
+for i in range(1,UserCount+1):
     conn = sqlite3.connect("SDVXRanking.db")
     cur = conn.cursor()
     sql = "select UserID from UserInfo where UserNumber=?"
@@ -76,3 +94,7 @@ for i in range(1,20):
     AnzuID = cur.fetchone()[0]
     conn.close()
     UpdateRanking(AnzuID)
+
+UpdateFirstRanking()
+'''
+

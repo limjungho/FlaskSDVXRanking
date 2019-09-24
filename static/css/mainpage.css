@@ -41,8 +41,6 @@
 
 	.pagination a:hover:not(.active) {background-color: #ddd;}
 
-
-
 	.TrackList table {
 		width: 1080px;
 		border: 1px solid black;
@@ -62,6 +60,15 @@
 	.RankingTable th, td {
 		border: 1px solid black;
 	}
+  .UserRankingTable table{
+    width: 600px;
+    border: 1px solid black;
+    text-align: center;
+    margin: 5px 10px 10px 10px;
+  }
+  .UserRankingTable th, td{
+    border: 1px solid black;
+  }
 
 	#loading{
 		text-align: center;
@@ -115,153 +122,171 @@
 		font-size:16px;
 	}
 
+  .RankingMenu td{
+    border: none;
+  }
+  .RankingMenu div{
+    background: #E0E008;
+    width: auto;
+    height: auto;
+    border-radius: 10px;
+    padding:5px 15px 5px 15px;
+    font-size:19px;
+    font-weight: bold;
+    color: white;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    cursor: pointer;
+  }
+
 	.TrackBox {
 		margin-left:10px;
-        display: inline-block;
-        border: 3px solid #808080;
-        width: auto;
-        height: auto;
-        table-layout: fixed;
-        overflow: hidden;
-        border-collapse: collapse;
-        background-color: white;
-        border-spacing:0px;
-      }
-      .img{
-        width:100px;
-        height:100px;
-        display: block;
-      }
-      #TrackTitle {
-        background: white;
-        border: 5px solid #a0a0a0;
-        width: 530px;
-        height: 26px;
-        border-radius: 10px;
-        padding:5px 5px 5px 15px;
-        font-size:19px;
-        font-weight: bold;
-      }
-
-      #rcornersEXH1{
-        background: #DD0000;
-        width: auto;
-        height: auto;
-        border-radius: 10px 0px 0px 10px;
-        padding:5px 15px 5px 15px;
-        font-size:19px;
-        font-weight: bold;
-        color: white;
-        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-        cursor: pointer;
-      }
-
-      #rcornersEXH2{
-        background: #EE0000;
-        width: 105px;
-        height: auto;
-        border-radius: 0px 10px 10px 0px;
-        padding:5px 25px 5px 15px;
-        font-size:19px;
-        font-weight: bold;
-        color: white;
-        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-        cursor: pointer;
-      }
-
-      #rcornersMXM1, #rcornersINF1, #rcornersGRV1, #rcornersHVN1, #rcornersVVD1{
-        width: auto;
-        height: auto;
-        border-radius: 10px 0px 0px 10px;
-        padding:5px 15px 5px 15px;
-        font-size:19px;
-        font-weight: bold;
-        color: white;
-        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-        cursor: pointer;
-      }
-      #rcornersMXM1{
-      	background : #707070;
-      }
-      #rcornersINF1{
-      	background : #CC00CC;
-      }
-      #rcornersGRV1{
-      	background : #C25005;
-      }
-      #rcornersHVN1{
-      	background : #0067CC;
-      }
-      #rcornersVVD1{
-      	background : #C50141;
-      }
-
-      #rcornersMXM2, #rcornersINF2, #rcornersGRV2, #rcornersHVN2, #rcornersVVD2{
-        width: 105px;
-        height: auto;
-        border-radius: 0px 10px 10px 0px;
-        padding:5px 25px 5px 15px;
-        font-size:19px;
-        font-weight: bold;
-        color: white;
-        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-        cursor: pointer;
-      }
-      #rcornersMXM2{
-      	background : #808080;
-      }
-      #rcornersINF2{
-      	background : #DD00DD;
-      }
-      #rcornersGRV2{
-      	background : #D4600A;
-      }
-      #rcornersHVN2{
-      	background : #0078DD;
-      }
-      #rcornersVVD2{
-      	background : #D60152;
-      }
-
-      .DiffBoxEXH1{
-        padding: 0px 0px 0px 10px;
-        float: left;
-        border: none;
-      }
-      .DiffBoxEXH1 a{
-      	display:block;
-    　	width:100%;
-      	height:100%;
-      	text-decoration:none;
-      	color : #ffffff;
-      }
-      .DiffBoxEXH2{
-        padding: 0px 0px 0px 2px;
-        float: left;
-        border: none;
-      }
-
-      .DiffBoxMXM1{
-        padding: 0px 2px 0px 0px;
-        float: right;
-        border: none;
-      }
-
-      .DiffBoxMXM2{
-        padding: 0px 10px 0px 0px;
-        float: right;
-        border: none;
-      }
+    display: inline-block;
+    border: 3px solid #808080;
+    width: auto;
+    height: auto;
+    table-layout: fixed;
+    overflow: hidden;
+    border-collapse: collapse;
+    background-color: white;
+    border-spacing:0px;
+  }
+  .img{
+    width:100px;
+    height:100px;
+    display: block;
+  }
 
 
-      .TitleBox{
-        padding:3px 10px 3px 10px;
-        border: none;
-      }
-      .ImgBox{
-        padding:0;
-        border-right:3px solid #808080;
-      }
+  #TrackTitle {
+    background: white;
+    border: 5px solid #a0a0a0;
+    width: 530px;
+    height: 26px;
+    border-radius: 10px;
+    padding:5px 5px 5px 15px;
+    font-size:19px;
+    font-weight: bold;
+  }
+
+  #rcornersEXH1{
+    background: #DD0000;
+    width: auto;
+    height: auto;
+    border-radius: 10px 0px 0px 10px;
+    padding:5px 15px 5px 15px;
+    font-size:19px;
+    font-weight: bold;
+    color: white;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    cursor: pointer;
+  }
+
+  #rcornersEXH2{
+    background: #EE0000;
+    width: 105px;
+    height: auto;
+    border-radius: 0px 10px 10px 0px;
+    padding:5px 25px 5px 15px;
+    font-size:19px;
+    font-weight: bold;
+    color: white;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    cursor: pointer;
+  }
+
+  #rcornersMXM1, #rcornersINF1, #rcornersGRV1, #rcornersHVN1, #rcornersVVD1{
+    width: auto;
+    height: auto;
+    border-radius: 10px 0px 0px 10px;
+    padding:5px 15px 5px 15px;
+    font-size:19px;
+    font-weight: bold;
+    color: white;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    cursor: pointer;
+  }
+  #rcornersMXM1{
+  	background : #707070;
+  }
+  #rcornersINF1{
+  	background : #CC00CC;
+  }
+  #rcornersGRV1{
+  	background : #C25005;
+  }
+  #rcornersHVN1{
+  	background : #0067CC;
+  }
+  #rcornersVVD1{
+  	background : #C50141;
+  }
+
+  #rcornersMXM2, #rcornersINF2, #rcornersGRV2, #rcornersHVN2, #rcornersVVD2{
+    width: 105px;
+    height: auto;
+    border-radius: 0px 10px 10px 0px;
+    padding:5px 25px 5px 15px;
+    font-size:19px;
+    font-weight: bold;
+    color: white;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    cursor: pointer;
+  }
+  #rcornersMXM2{
+  	background : #808080;
+  }
+  #rcornersINF2{
+  	background : #DD00DD;
+  }
+  #rcornersGRV2{
+  	background : #D4600A;
+  }
+  #rcornersHVN2{
+  	background : #0078DD;
+  }
+  #rcornersVVD2{
+  	background : #D60152;
+  }
+
+  .DiffBoxEXH1{
+    padding: 0px 0px 0px 10px;
+    float: left;
+    border: none;
+  }
+  .DiffBoxEXH1 a{
+  	display:block;
+　	width:100%;
+  	height:100%;
+  	text-decoration:none;
+  	color : #ffffff;
+  }
+  .DiffBoxEXH2{
+    padding: 0px 0px 0px 2px;
+    float: left;
+    border: none;
+  }
+
+  .DiffBoxMXM1{
+    padding: 0px 2px 0px 0px;
+    float: right;
+    border: none;
+  }
+
+  .DiffBoxMXM2{
+    padding: 0px 10px 0px 0px;
+    float: right;
+    border: none;
+  }
+
+
+  .TitleBox{
+    padding:3px 10px 3px 10px;
+    border: none;
+  }
+  .ImgBox{
+    padding:0;
+    border-right:3px solid #808080;
+  }
 
 
 </style>

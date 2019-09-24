@@ -5,35 +5,71 @@
 <div>
       <h1 style="margin-left:10px;">User Ranking</h1>
 </div>
-<table>
+<table align="center" class="RankingMenu">
   <tr>
     <td><div onclick="RankingType('1')">난이도 전체 PUC 개수 Ranking</div></td>
     <td><div onclick="RankingType('2')">EXH 이상 난이도 PUC 개수 Ranking</div></td>
     <td><div onclick="RankingType('3')">곡 점수랭킹 1위 달성 횟수 Ranking</div></td>
   </tr>
-
-  {% if type|int>=1 and type|int<=3 %}
-    <div class="RankingTable">
-        <table>
-          <th>Rank</th>
-          <th>SDVX NickName</th>
-          <th>PUC 개수</th>
-          {% for user in RankList %}
-          <tr>
-              {% for elem in user %}
-                <td>{{elem}}</td>
-              {% endfor %}
-          </tr>
-          {% endfor %}
-        </table>
-      </div>
-    {% endif %}
 </table>
+<br/>
+{% if type|int>=1 and type|int<=3 %}
+  <div align="center">
+  {% if type|int==1 %}
+  <h2>난이도 전체 PUC 개수 Ranking</h2>
+  {% elif type|int==2 %}
+  <h2>EXH 이상 난이도 PUC 개수 Ranking</h2>
+  {% elif type|int==3 %}
+  <h2>곡 점수랭킹 1위 달성 횟수 Ranking</h2>
+  {% endif %}
+  </div>
+  <div align="center" class="UserRankingTable">
+      <table>
+        <th>Rank</th>
+        <th>SDVX NickName</th>
+        {% if type|int == 3 %}
+        <th>1위 횟수</th>
+        {% else %}
+        <th>PUC 개수</th>
+        {% endif %}
+        {% for user in RankList %}
+        <tr>
+            {% if RankList[loop.index0][0] == 1 %}
+              <td><img src="{{url_for('static',filename='img/GradeCompleteImg/first.png')}}"></td>
+              <td class="first">{{RankList[loop.index0][1]}}</td>
+              <td class="first">{{RankList[loop.index0][2]}}</td>
+            {% elif RankList[loop.index0][0] == 2 %}
+              <td><img src="{{url_for('static',filename='img/GradeCompleteImg/second.png')}}"></td>
+              <td class="second">{{RankList[loop.index0][1]}}</td>
+              <td class="second">{{RankList[loop.index0][2]}}</td>
+            {% elif RankList[loop.index0][0] == 3 %}
+              <td><img src="{{url_for('static',filename='img/GradeCompleteImg/third.png')}}"></td>
+              <td class="third">{{RankList[loop.index0][1]}}</td>
+              <td class="third">{{RankList[loop.index0][2]}}</td>
+            {% else %}
+              <td>{{RankList[loop.index0][0]}}</td>
+              <td>{{RankList[loop.index0][1]}}</td>
+              <td>{{RankList[loop.index0][2]}}</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+      </table>
+      {% if type|int == 3 %}
+          <input type='button' value='Ranking 갱신하기(20초 정도 소요)'
+          style="width:280px; height:50px" onclick='UpdateFrRank()'>
+      {% endif %}
+  </div>
+  {% endif %}
+
 <br/>
 
 <script>
-   function RankingType(typ){
+  function RankingType(typ){
     location.href="/UserRanking?type="+typ;
+ }
+ function UpdateFrRank(){
+  alert('갱신 시작');
+  location.href="{{url_for('FirstRankUpdate')}}";
  }
 </script>
 {% endblock %}

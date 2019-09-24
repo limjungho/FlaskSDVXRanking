@@ -5,7 +5,7 @@
 <script>
   function UpdateCheck(user){
     if(confirm('기록 갱신을 하시겠습니까?\nID : '+ user)==true){
-      location.href='/UserUpdate.html?user='+user;
+      location.href='/UserUpdate?user='+user;
     }
   }
 </script>
@@ -19,7 +19,7 @@
           <th>Update</th>
           {% for user in UserList %}
           <tr>
-              {% for elem in user %}
+              {% for elem in user[0:3] %}
                 <td>{{elem}}</td>
               {% endfor %}
               <td>

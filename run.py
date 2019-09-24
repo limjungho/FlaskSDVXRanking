@@ -4,7 +4,7 @@ from time import sleep
 from flask import Flask, render_template, current_app, g, request, redirect, url_for
 import sqlite3
 from UserUpdate import UserUpdateProc, TrackRendering
-from UserRankingUpdate import UpdateRanking
+from UserRankingUpdate import UpdateRanking, UpdateFirstRanking
 import urllib.parse
 
 
@@ -173,7 +173,6 @@ def TrackLevelSearch():
 
 @app.route('/UserRanking', methods = ['GET'])
 def UserRanking():
-
     RankList = []
     typ = request.args.get('type')
     if typ is None:
@@ -207,6 +206,11 @@ def EvalRankList(rankfactor):
             prevUser = user[1]
             RankList.append((prevRank, user[0], user[1]))
     return RankList
+
+@app.route('/FirstRankUpdate', methods = ['GET'])
+def FirstRankUpdate():
+    UpdateFirstRanking()
+    return redirect(url_for('UserRanking', type = '3'))
 
 @app.route('/UserInfoUpdate')
 def UserInfoUpdate():
