@@ -111,21 +111,31 @@
 	.topmenu li a:hover {
 	  background-color: #111;
 	}
-	.LevelSearch optgroup{
+  .LevelSearchRank{
+    position:absolute;
+    left: 0;
+  }
+
+	.LevelSearch optgroup, .LevelSearchRank optgroup{
 		font-size:16px;
 	}
 
-	.LevelSearch select{
+	.LevelSearch select, .LevelSearchRank select{
 		margin: 5px 10px 10px 10px;
 		width: 200px;
 		height: 30px;
 		font-size:16px;
 	}
+  .RankingMenu{
+    position:relative;
+    width:1000px;
+    margin:auto;
+  }
 
   .RankingMenu td{
     border: none;
   }
-  .RankingMenu div{
+  .RankingMenu table div{
     background: #E0E008;
     width: auto;
     height: auto;

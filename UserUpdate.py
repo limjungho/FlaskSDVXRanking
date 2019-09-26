@@ -129,6 +129,45 @@ def UserUpdateProc(AnzuID):
 
 DiffList = ['NOV', 'ADV', 'EXH', 'MXM', 'INF', 'GRV', 'HVN', 'VVD']
 
+def PUCTrackRendering(PageTrack, showtop):
+    conn = sqlite3.connect("SDVXRanking.db")
+    cur = conn.cursor()
+
+    NewPageTrack = []
+
+    for i, track in enumerate(PageTrack):
+        if i>0:
+            if track[1] == PageTrack[i-1][1]:
+                continue
+        if i<len(PageTrack)-1:
+            if track[1] == PageTrack[i+1][1]:
+                MXMLv = '??'
+                RealDiff = '??'
+                for j in range(5, 10):
+                    if PageTrack[i+1][j] is not None:
+                        MXMLv = PageTrack[i+1][j]
+                        RealDiff = DiffList[j - 2]
+                        break
+                NewPageTrack.append((track[1], track[4], MXMLv, track[0], RealDiff, showtop, showtop))
+                #print(NewPageTrack[-1])
+                continue
+
+        EXHLv = '??'
+        MXMLv = '??'
+        diff = track[-1]
+        if diff == 'EXH':
+            EXHLv = track[4]
+        else:
+            for i in range(5, 10):
+                if track[i] is not None:
+                    MXMLv = track[i]
+        NewPageTrack.append((track[1], EXHLv, MXMLv, track[0], diff, showtop, showtop))
+
+    conn.close()
+
+    return NewPageTrack
+
+
 def TrackRendering(PageTrack):
     conn = sqlite3.connect("SDVXRanking.db")
     cur = conn.cursor()

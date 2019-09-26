@@ -3,7 +3,7 @@ from threading import Thread
 from time import sleep
 from flask import Flask, render_template, current_app, g, request, redirect, url_for
 import sqlite3
-from UserUpdate import UserUpdateProc, TrackRendering
+from UserUpdate import UserUpdateProc, TrackRendering, PUCTrackRendering
 from UserRankingUpdate import UpdateRanking, UpdateFirstRanking
 import urllib.parse
 
@@ -174,6 +174,7 @@ def TrackLevelSearch():
 @app.route('/UserRanking', methods = ['GET'])
 def UserRanking():
     RankList = []
+    level = 0
     typ = request.args.get('type')
     if typ is None:
         typ = '0'
@@ -183,8 +184,43 @@ def UserRanking():
         RankList = EvalRankList('PUCEXHupperCount')
     elif typ == '3':
         RankList = EvalRankList('FirstRankCount')
+    elif typ == '4':
+        level = request.args.get('level')
+        if level is None:
+            level = 0
+        RankList = EvalAvgRankList(level)
 
-    return render_template('UserRanking.html', RankList=RankList, type=typ)
+    return render_template('UserRanking.html', RankList=RankList, type=typ, level=level)
+
+def EvalAvgRankList(Avglv):
+    conn = sqlite3.connect("SDVXRanking.db")
+    cur = conn.cursor()
+    RankList = []
+    if int(Avglv) is 0:
+        return RankList
+    sql = "select UserNumber, Average, Count from AvgData where Level=?;"
+    cur.execute(sql, (Avglv,))
+    AvgList = cur.fetchall()
+
+    sortedList = sorted(AvgList, key=lambda x: x[1], reverse=True)
+    sql = "select UserName from UserInfo where UserNumber=?;"
+    cur.execute(sql, (sortedList[0][0],))
+    UserName = cur.fetchone()[0]
+    RankList.append((1, UserName, sortedList[0][1], sortedList[0][2]))
+
+    prevRank = 1
+    prevUser = sortedList[0][1]
+    for rnk, user in enumerate(sortedList[1:]):
+        sql = "select UserName from UserInfo where UserNumber=?;"
+        cur.execute(sql, (user[0],))
+        UserName = cur.fetchone()[0]
+        if prevUser == user[1]:
+            RankList.append((prevRank, UserName, user[1], user[2]))
+        else:
+            prevRank = rnk + 2
+            prevUser = user[1]
+            RankList.append((prevRank, UserName, user[1], user[2]))
+    return RankList
 
 def EvalRankList(rankfactor):
     conn = sqlite3.connect("SDVXRanking.db")
@@ -207,7 +243,7 @@ def EvalRankList(rankfactor):
             RankList.append((prevRank, user[0], user[1]))
     return RankList
 
-@app.route('/FirstRankUpdate', methods = ['GET'])
+@app.route('/FirstRankUpdate')
 def FirstRankUpdate():
     UpdateFirstRanking()
     return redirect(url_for('UserRanking', type = '3'))
@@ -225,7 +261,38 @@ def UserInfoUpdate():
 
     return render_template('UserInfoUpdate.html', UserList=UserList)
 
+@app.route('/UserPUCList', methods = ['GET'])
+def UserPUCList():
+    conn = sqlite3.connect("SDVXRanking.db")
+    cur = conn.cursor()
 
+    ViewPageLen = 40
+    user = request.args.get('user')
+    page = request.args.get('page')
+    if page == None:
+        page = 1
+    page = int(page)
+
+    sql = "select UserNumber from UserInfo where UserName = ?;"
+    cur.execute(sql,(user,))
+    UserNum = cur.fetchone()[0]
+
+    sql = """select TrackID, Difficulty from ScoreData where UserNumber=? and Complete='PUC' 
+    and Difficulty != 'NOV' and Difficulty != 'ADV';"""
+    cur.execute(sql,(UserNum,))
+    PUCList = cur.fetchall()
+    TrackLen = int((len(PUCList) + ViewPageLen - 1) / ViewPageLen)
+    AllTrack = range(0, TrackLen)
+
+    PUCList = PUCList[ViewPageLen*(page-1):ViewPageLen*page]
+    newPUCList = []
+    for track in PUCList:
+        sql = "select * from TrackList where TrackID = ?;"
+        cur.execute(sql, (track[0],))
+        newPUCList.append(cur.fetchone()+(track[1],))
+    conn.close()
+    newPUCList =  PUCTrackRendering(newPUCList,user)
+    return render_template('UserPUCList.html', AllTrack=AllTrack, userName=user,PageTrack=newPUCList, page=page)
 
 @app.route('/UserUpdate',methods = ['GET'])
 def UserUpdate():

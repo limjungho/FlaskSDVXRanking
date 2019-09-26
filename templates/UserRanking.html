@@ -5,15 +5,32 @@
 <div>
       <h1 style="margin-left:10px;">User Ranking</h1>
 </div>
-<table align="center" class="RankingMenu">
-  <tr>
-    <td><div onclick="RankingType('1')">난이도 전체 PUC 개수 Ranking</div></td>
-    <td><div onclick="RankingType('2')">EXH 이상 난이도 PUC 개수 Ranking</div></td>
-    <td><div onclick="RankingType('3')">곡 점수랭킹 1위 달성 횟수 Ranking</div></td>
-  </tr>
-</table>
+  <div class="RankingMenu">
+    <table>
+      <tr>
+        <td><div onclick="RankingType('1')">난이도 전체 PUC 개수 Ranking</div></td>
+        <td><div onclick="RankingType('2')">EXH 이상 난이도 PUC 개수 Ranking</div></td>
+        <td><div onclick="RankingType('3')">곡 점수랭킹 1위 달성 횟수 Ranking</div></td>
+      </tr>
+        <td><div onclick="RankingType('4')">레벨 별 평균 점수 Ranking</div></td>
+      <tr>
+      </tr>
+    </table>
+    {% if type|int==4 %}
+    <div class="LevelSearchRank">
+      <select id='LevelSelect' name='LevelList' onchange="LevelSelect()">
+        <optgroup>
+          <option value='' selected>-- 레벨 선택 --</option>
+          {% for elem in range(1,21) %}
+          <option value='Lv.{{elem}}'>Lv.{{elem}}</option>
+          {% endfor %}
+        </optgroup>
+      </select>
+    </div>
+  {% endif %}
+  </div>
 <br/>
-{% if type|int>=1 and type|int<=3 %}
+{% if type|int>=1 and type|int<=4 %}
   <div align="center">
   {% if type|int==1 %}
   <h2>난이도 전체 PUC 개수 Ranking</h2>
@@ -21,6 +38,14 @@
   <h2>EXH 이상 난이도 PUC 개수 Ranking</h2>
   {% elif type|int==3 %}
   <h2>곡 점수랭킹 1위 달성 횟수 Ranking</h2>
+  {% elif type|int==3 %}
+  <h2>레벨 별 평균 Ranking</h2>
+  {% elif type|int==4 %}
+  <h2>
+    {% if level|int !=0 %}
+    Lv.{{level}}
+    {% endif %}
+     평균 점수 Ranking</h2>
   {% endif %}
   </div>
   <div align="center" class="UserRankingTable">
@@ -29,30 +54,106 @@
         <th>SDVX NickName</th>
         {% if type|int == 3 %}
         <th>1위 횟수</th>
+        {% elif type|int == 4 %}
+        <th>평균</th>
+        <th>플레이 개수</th>
         {% else %}
         <th>PUC 개수</th>
         {% endif %}
+
+        {% if type|int == 2 %}
         {% for user in RankList %}
-        <tr>
-            {% if RankList[loop.index0][0] == 1 %}
-              <td><img src="{{url_for('static',filename='img/GradeCompleteImg/first.png')}}"></td>
-              <td class="first">{{RankList[loop.index0][1]}}</td>
-              <td class="first">{{RankList[loop.index0][2]}}</td>
-            {% elif RankList[loop.index0][0] == 2 %}
-              <td><img src="{{url_for('static',filename='img/GradeCompleteImg/second.png')}}"></td>
-              <td class="second">{{RankList[loop.index0][1]}}</td>
-              <td class="second">{{RankList[loop.index0][2]}}</td>
-            {% elif RankList[loop.index0][0] == 3 %}
-              <td><img src="{{url_for('static',filename='img/GradeCompleteImg/third.png')}}"></td>
-              <td class="third">{{RankList[loop.index0][1]}}</td>
-              <td class="third">{{RankList[loop.index0][2]}}</td>
-            {% else %}
-              <td>{{RankList[loop.index0][0]}}</td>
-              <td>{{RankList[loop.index0][1]}}</td>
-              <td>{{RankList[loop.index0][2]}}</td>
-            {% endif %}
-        </tr>
+          {% if user[0]==1 %}
+          <tr>
+          <td><img src="{{url_for('static',filename='img/GradeCompleteImg/first.png')}}"></td>
+              <td class="first">{{user[1]}}</td>
+              <td class="first"><a href="{{url_for('UserPUCList',user=user[1])}}">{{user[2]}}</a></td>
+          </tr>
+          {% elif user[0]==2 %}
+          <tr>
+            <td><img src="{{url_for('static',filename='img/GradeCompleteImg/second.png')}}"></td>
+                <td class="second">{{user[1]}}</td>
+                <td class="second"><a href="{{url_for('UserPUCList',user=user[1])}}">{{user[2]}}</a></td>
+          </tr>
+          {% elif user[0]==3 %}
+          <tr>
+            <td><img src="{{url_for('static',filename='img/GradeCompleteImg/third.png')}}"></td>
+                <td class="third">{{user[1]}}</td>
+                <td class="third"><a href="{{url_for('UserPUCList',user=user[1])}}">{{user[2]}}</a></td>
+          </tr>
+          {% else %}
+          <tr>
+              <td>{{user[0]}}</td>
+              <td>{{user[1]}}</td>
+              <td><a href="{{url_for('UserPUCList',user=user[1])}}">{{user[2]}}</a></td>
+          </tr>
+          {% endif %}
         {% endfor %}
+
+        {% elif type|int == 4 %}
+          {% if level|int !=0 %}
+            {% for user in RankList %}
+              {% if user[0]==1 %}
+              <tr>
+              <td><img src="{{url_for('static',filename='img/GradeCompleteImg/first.png')}}"></td>
+                  <td class="first">{{user[1]}}</td>
+                  <td class="first">{{user[2]}}</td>
+                  <td class="first">{{user[3]}}</td>
+              </tr>
+              {% elif user[0]==2 %}
+              <tr>
+                <td><img src="{{url_for('static',filename='img/GradeCompleteImg/second.png')}}"></td>
+                    <td class="second">{{user[1]}}</td>
+                    <td class="second">{{user[2]}}</td>
+                    <td class="second">{{user[3]}}</td>
+              </tr>
+              {% elif user[0]==3 %}
+              <tr>
+                <td><img src="{{url_for('static',filename='img/GradeCompleteImg/third.png')}}"></td>
+                    <td class="third">{{user[1]}}</td>
+                    <td class="third">{{user[2]}}</td>
+                    <td class="third">{{user[3]}}</td>
+              </tr>
+              {% else %}
+              <tr>
+                  <td>{{user[0]}}</td>
+                  <td>{{user[1]}}</td>
+                  <td>{{user[2]}}</td>
+                  <td>{{user[3]}}</td>
+              </tr>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+        {% else %}
+        {% for user in RankList %}
+          {% if user[0]==1 %}
+          <tr>
+          <td><img src="{{url_for('static',filename='img/GradeCompleteImg/first.png')}}"></td>
+              <td class="first">{{user[1]}}</td>
+              <td class="first">{{user[2]}}</td>
+          </tr>
+          {% elif user[0]==2 %}
+          <tr>
+            <td><img src="{{url_for('static',filename='img/GradeCompleteImg/second.png')}}"></td>
+                <td class="second">{{user[1]}}</td>
+                <td class="second">{{user[2]}}</td>
+          </tr>
+          {% elif user[0]==3 %}
+          <tr>
+            <td><img src="{{url_for('static',filename='img/GradeCompleteImg/third.png')}}"></td>
+                <td class="third">{{user[1]}}</td>
+                <td class="third">{{user[2]}}</td>
+          </tr>
+          {% else %}
+          <tr>
+              <td>{{user[0]}}</td>
+              <td>{{user[1]}}</td>
+              <td>{{user[2]}}</td>
+          </tr>
+          {% endif %}
+        {% endfor %}
+        {% endif %}
       </table>
       {% if type|int == 3 %}
           <input type='button' value='Ranking 갱신하기(20초 정도 소요)'
@@ -60,7 +161,6 @@
       {% endif %}
   </div>
   {% endif %}
-
 <br/>
 
 <script>
@@ -70,6 +170,11 @@
  function UpdateFrRank(){
   alert('갱신 시작');
   location.href="{{url_for('FirstRankUpdate')}}";
+ }
+ function LevelSelect(){
+    var SelectedLevel = document.getElementById("LevelSelect");
+    var SelectedText = SelectedLevel.options[SelectedLevel.selectedIndex].value;
+    location.href='/UserRanking?type=4&level='+SelectedText.substr(3,);
  }
 </script>
 {% endblock %}

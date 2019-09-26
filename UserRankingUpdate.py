@@ -18,7 +18,6 @@ def UpdateRanking(AnzuID):
     cur.execute(sql,(UserNum,))
     PUCList = cur.fetchall()
     PUCCount = len(PUCList)
-
     sql = "update UserInfo SET PUCCount = ? where UserNumber=?;"
     cur.execute(sql,(PUCCount,UserNum))
 
@@ -26,9 +25,28 @@ def UpdateRanking(AnzuID):
     cur.execute(sql, (UserNum,))
     PUCList = cur.fetchall()
     PUCCount = len(PUCList)
-
     sql = "update UserInfo SET PUCEXHupperCount = ? where UserNumber=?;"
     cur.execute(sql, (PUCCount, UserNum))
+
+    for i in range(1,21):
+        SumList = [0] * 21
+        CountList = [0] * 21
+        sql = "select TrackID, Difficulty, Score from ScoreData where UserNumber=?;"
+        cur.execute(sql, (UserNum,))
+        ScoreList = cur.fetchall()
+        for score in ScoreList:
+            sql = "select " + score[1] + " from TrackList where TrackID = " + score[0] + ";"
+            cur.execute(sql)
+            Level = cur.fetchone()[0]
+            SumList[int(Level)] = SumList[int(Level)] + int(score[2])
+            CountList[int(Level)] = CountList[int(Level)] + 1
+        AvgList = [0] * 21
+        for i in range(1, 21):
+            if CountList[i] is not 0:
+                AvgList[i] = int(SumList[i] / CountList[i])
+        for i in range(1, 21):
+            sql = "update AvgData SET Average=?, Count=? where UserNumber=? and Level=?;"
+            cur.execute(sql, (AvgList[i],CountList[i],UserNum,i))
 
     conn.commit()
     conn.close()
