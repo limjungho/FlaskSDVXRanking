@@ -131,12 +131,10 @@ def TrackTitleSearch():
     cur.execute(sql)
     SearchTrackList = cur.fetchall()
     #print(SearchTrackList)
-
-    newSearchTrackList = TrackRendering(SearchTrackList)
-    newSearchTrackList = newSearchTrackList[ViewPageLen * (int(page) - 1):ViewPageLen * int(page)]
-
     TrackLen = int((len(SearchTrackList) + ViewPageLen) / ViewPageLen)
     AllTrack = range(0, TrackLen)
+    SearchTrackList = SearchTrackList[ViewPageLen * (int(page) - 1):ViewPageLen * int(page)]
+    newSearchTrackList = TrackRendering(SearchTrackList)
 
     conn.close()
     return render_template('FindTitleIndex.html',AllTrack=AllTrack,SearchTrackList=newSearchTrackList,
@@ -146,6 +144,8 @@ def TrackTitleSearch():
 def TrackLevelSearch():
     ViewPageLen = 40
     SearchLevel = request.args.get('level')
+    if SearchLevel is None:
+        return redirect(url_for('MainIndex'))
     if SearchLevel.isdigit() == False:
         return redirect(url_for('MainIndex'))
 
@@ -159,17 +159,75 @@ def TrackLevelSearch():
     leveltuple = (SearchLevel,)*8
     cur.execute(sql,leveltuple)
     SearchTrackList = cur.fetchall()
-
-    newSearchTrackList = TrackRendering(SearchTrackList)
-
     TrackLen = int((len(SearchTrackList) + ViewPageLen-1) / ViewPageLen)
     AllTrack = range(0, TrackLen)
-
-    newSearchTrackList = newSearchTrackList[ViewPageLen*(int(page)-1):ViewPageLen*int(page)]
+    SearchTrackList = SearchTrackList[ViewPageLen * (int(page) - 1):ViewPageLen * int(page)]
+    newSearchTrackList = TrackRendering(SearchTrackList)
 
     conn.close()
     return render_template('FindLevelIndex.html',AllTrack=AllTrack,SearchTrackList=newSearchTrackList,
                            DiffList=DiffList,SearchLevel=SearchLevel,page=page)
+
+@app.route('/AvgTrackList', methods = ['GET'])
+def AvgTrackList():
+    level = request.args.get('level')
+    if level is None:
+        return redirect(url_for('MainIndex'))
+    if level.isdigit() == False:
+        return redirect(url_for('MainIndex'))
+
+    ViewPageLen = 40
+    page = request.args.get('page')
+    if page is None:
+        page = 1
+    conn = sqlite3.connect("SDVXRanking.db")
+    cur = conn.cursor()
+
+    sql = """select * from TrackList where EXH=?;"""
+    cur.execute(sql,(level,))
+    EXHTrackList = cur.fetchall()
+    sql = """select * from TrackList where MXM=? OR INF=? OR GRV=? OR HVN=? OR VVD=?;"""
+    leveltuple = (level,)*5
+    cur.execute(sql,leveltuple)
+    MXMTrackList = cur.fetchall()
+    TrackLen = int((len(EXHTrackList) + len(MXMTrackList) + ViewPageLen-1) / ViewPageLen)
+    AllTrack = range(0, TrackLen)
+    conn.close()
+    AvgSearchTrackList = []
+    AvgSearchTrackList += AvgTrackRendering(EXHTrackList, 'EXH')
+    AvgSearchTrackList += AvgTrackRendering(MXMTrackList, 'MXM')
+    sortedAvgTrackList = sorted(AvgSearchTrackList, key=lambda x: x[0], reverse=True)
+    sortedAvgTrackList = sortedAvgTrackList[ViewPageLen * (int(page) - 1):ViewPageLen * int(page)]
+    return render_template('AvgTrackList.html',AllTrack=AllTrack,
+                           AvgList = sortedAvgTrackList, DiffList=DiffList,SearchLevel=level,page=page)
+
+def AvgTrackRendering(LevelTrackList, Diff):
+    conn = sqlite3.connect("SDVXRanking.db")
+    cur = conn.cursor()
+    AvgList = []
+    for Track in LevelTrackList:
+        tid = Track[0]
+        title = Track[1]
+        if Diff=='MXM':
+            for i in range(5, 10):
+                if Track[i] is not None:
+                    RealDiff = DiffList[i - 2]
+        else:
+            RealDiff = Diff
+        sql = "select Score from ScoreData where TrackID=? AND Difficulty=? AND Complete != 'PLAY';"
+        cur.execute(sql, (tid, RealDiff))
+        ScoreList = cur.fetchall()
+        if len(ScoreList) == 0:
+            Avg = 0
+        else:
+            ScoreSum = 0
+            for score in ScoreList:
+                ScoreSum += score[0]
+            Avg = int(ScoreSum / len(ScoreList))
+        AvgList.append((Avg, tid, title, RealDiff))
+    conn.close()
+
+    return AvgList
 
 @app.route('/UserRanking', methods = ['GET'])
 def UserRanking():
