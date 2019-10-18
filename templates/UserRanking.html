@@ -15,6 +15,7 @@
       <tr>
         <td><div onclick="RankingType('4')">레벨 별 평균 점수 Ranking</div></td>
         <td><div onclick="RankingType('5')">레벨 별 Track 평균 점수 Ranking</div></td>
+        <td><div onclick="RankingType('6')">볼포스 Ranking</div></td>
       </tr>
     </table>
     {% if type|int==4 or type|int==5 %}
@@ -31,7 +32,7 @@
   {% endif %}
   </div>
 <br/>
-{% if type|int>=1 and type|int<=4 %}
+{% if type|int>=1 and type|int<=4 or type|int==6 %}
   <div align="center">
   {% if type|int==1 %}
   <h2>난이도 전체 PUC 개수 Ranking</h2>
@@ -47,6 +48,8 @@
     Lv.{{level}}
     {% endif %}
      평균 점수 Ranking</h2>
+  {% elif type|int==6 %}
+  <h2>볼포스 Ranking</h2>
   {% endif %}
   </div>
   <div align="center" class="UserRankingTable">
@@ -58,6 +61,8 @@
         {% elif type|int == 4 %}
         <th>평균</th>
         <th>플레이 개수</th>
+        {% elif type|int == 6 %}
+        <th>VolForce</th>
         {% else %}
         <th>PUC 개수</th>
         {% endif %}
@@ -125,6 +130,35 @@
               {% endif %}
             {% endfor %}
           {% endif %}
+
+        {% elif type|int == 6 %}
+        {% for user in RankList %}
+          {% if user[0]==1 %}
+          <tr>
+          <td><img src="{{url_for('static',filename='img/GradeCompleteImg/first.png')}}"></td>
+              <td class="first">{{user[1]}}</td>
+              <td class="first">{{'%0.2f'| format(user[2])}}</td>
+          </tr>
+          {% elif user[0]==2 %}
+          <tr>
+            <td><img src="{{url_for('static',filename='img/GradeCompleteImg/second.png')}}"></td>
+                <td class="second">{{user[1]}}</td>
+                <td class="second">{{'%0.2f'| format(user[2])}}</td>
+          </tr>
+          {% elif user[0]==3 %}
+          <tr>
+            <td><img src="{{url_for('static',filename='img/GradeCompleteImg/third.png')}}"></td>
+                <td class="third">{{user[1]}}</td>
+                <td class="third">{{'%0.2f'| format(user[2])}}</td>
+          </tr>
+          {% else %}
+          <tr>
+              <td>{{user[0]}}</td>
+              <td>{{user[1]}}</td>
+              <td>{{'%0.2f'| format(user[2])}}</td>
+          </tr>
+          {% endif %}
+          {% endfor %}
 
         {% else %}
         {% for user in RankList %}

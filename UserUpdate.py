@@ -4,6 +4,7 @@ import sqlite3
 from time import sleep
 import random
 import sys
+from LoginFetch import volforce_user
 
 class SDVXTrack:
     def __init__(self):
@@ -70,6 +71,11 @@ def UserUpdateProc(AnzuID):
 
     conn = sqlite3.connect("SDVXRanking.db")
     cur = conn.cursor()
+
+    volf = volforce_user(AnzuID)
+    sql = "update UserInfo SET VolForce = ? where UserID = ?;"
+    cur.execute(sql, (volf,AnzuID))
+    conn.commit()
 
     for i in range(1,100):
         req = Request('http://anzuinfo.me/myScore.html?search_id='+AnzuID+'&sort=update_up&page='+str(i))

@@ -247,7 +247,8 @@ def UserRanking():
         if level is None:
             level = 0
         RankList = EvalAvgRankList(level)
-
+    elif typ == '6':
+        RankList = EvalRankList('VolForce')
     return render_template('UserRanking.html', RankList=RankList, type=typ, level=level)
 
 def EvalAvgRankList(Avglv):
