@@ -17,6 +17,7 @@
           <th>anzuinfoID</th>
           <th>SDVX NickName</th>
           <th>Update</th>
+          <th>최근 갱신 시간</th>
           {% for user in UserList %}
           <tr>
               {% for elem in user[0:3] %}
@@ -24,6 +25,9 @@
               {% endfor %}
               <td>
                 <input type="button" value="Update" onclick="UpdateCheck('{{user[1]}}')">
+              </td>
+              <td>
+                {{user[7]}}
               </td>
           </tr>
           {% endfor %}

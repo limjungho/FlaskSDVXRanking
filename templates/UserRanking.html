@@ -17,6 +17,10 @@
         <td><div onclick="RankingType('5')">레벨 별 Track 평균 점수 Ranking</div></td>
         <td><div onclick="RankingType('6')">볼포스 Ranking</div></td>
       </tr>
+      <tr>
+        <td></td>
+        <td><div style="background: #FF0000;" onclick="RankingType('7')">18렙 大전투시대</div></td>
+      </tr>
     </table>
     {% if type|int==4 or type|int==5 %}
     <div class="LevelSearchRank">
@@ -32,7 +36,7 @@
   {% endif %}
   </div>
 <br/>
-{% if type|int>=1 and type|int<=4 or type|int==6 %}
+{% if type|int>=1 and type|int<=4 or type|int>=6 %}
   <div align="center">
   {% if type|int==1 %}
   <h2>난이도 전체 PUC 개수 Ranking</h2>
@@ -40,8 +44,6 @@
   <h2>EXH 이상 난이도 PUC 개수 Ranking</h2>
   {% elif type|int==3 %}
   <h2>곡 점수랭킹 1위 달성 횟수 Ranking</h2>
-  {% elif type|int==3 %}
-  <h2>레벨 별 평균 Ranking</h2>
   {% elif type|int==4 %}
   <h2>
     {% if level|int !=0 %}
@@ -50,17 +52,20 @@
      평균 점수 Ranking</h2>
   {% elif type|int==6 %}
   <h2>볼포스 Ranking</h2>
+  {% elif type|int==7 %}
+  <h2>18렙 大전투시대 (1등 횟수)</h2>
   {% endif %}
   </div>
   <div align="center" class="UserRankingTable">
       <table>
         <th>Rank</th>
         <th>SDVX NickName</th>
-        {% if type|int == 3 %}
+        {% if type|int == 3 or type|int == 7%}
         <th>1위 횟수</th>
         {% elif type|int == 4 %}
         <th>평균</th>
         <th>플레이 개수</th>
+        <th>점수 총합</th>
         {% elif type|int == 6 %}
         <th>VolForce</th>
         {% else %}
@@ -105,6 +110,7 @@
                   <td class="first">{{user[1]}}</td>
                   <td class="first">{{user[2]}}</td>
                   <td class="first">{{user[3]}}</td>
+                  <td class="first">{{user[4]}}</td>
               </tr>
               {% elif user[0]==2 %}
               <tr>
@@ -112,6 +118,7 @@
                     <td class="second">{{user[1]}}</td>
                     <td class="second">{{user[2]}}</td>
                     <td class="second">{{user[3]}}</td>
+                    <td class="second">{{user[4]}}</td>
               </tr>
               {% elif user[0]==3 %}
               <tr>
@@ -119,6 +126,7 @@
                     <td class="third">{{user[1]}}</td>
                     <td class="third">{{user[2]}}</td>
                     <td class="third">{{user[3]}}</td>
+                    <td class="third">{{user[4]}}</td>
               </tr>
               {% else %}
               <tr>
@@ -126,13 +134,14 @@
                   <td>{{user[1]}}</td>
                   <td>{{user[2]}}</td>
                   <td>{{user[3]}}</td>
+                  <td>{{user[4]}}</td>
               </tr>
               {% endif %}
             {% endfor %}
           {% endif %}
 
         {% elif type|int == 6 %}
-        {% for user in RankList %}
+          {% for user in RankList %}
           {% if user[0]==1 %}
           <tr>
           <td><img src="{{url_for('static',filename='img/GradeCompleteImg/first.png')}}"></td>
@@ -159,6 +168,41 @@
           </tr>
           {% endif %}
           {% endfor %}
+
+        {% elif type|int == 7 %}
+            {% for user in RankList %}
+            {% if user[0]==1 %}
+            <tr style="background-color: #808080">
+                <td class="first">SOL</td>
+                <td class="first">{{user[1]}}</td>
+                <td class="first">{{user[2]}}</td>
+            </tr>
+            {% elif user[0]==2 %}
+            <tr>
+              <td><img src="{{url_for('static',filename='img/GradeCompleteImg/first.png')}}"></td>
+                  <td class="second">{{user[1]}}</td>
+                  <td class="second">{{user[2]}}</td>
+            </tr>
+            {% elif user[0]==3 %}
+            <tr>
+              <td><img src="{{url_for('static',filename='img/GradeCompleteImg/second.png')}}"></td>
+                  <td class="third">{{user[1]}}</td>
+                  <td class="third">{{user[2]}}</td>
+            </tr>
+            {% elif user[0]==4 %}
+            <tr>
+              <td><img src="{{url_for('static',filename='img/GradeCompleteImg/third.png')}}"></td>
+                  <td class="third">{{user[1]}}</td>
+                  <td class="third">{{user[2]}}</td>
+            </tr>
+          {% else %}
+          <tr>
+              <td>{{user[0]}}</td>
+              <td>{{user[1]}}</td>
+              <td>{{user[2]}}</td>
+          </tr>
+        {% endif %}
+        {% endfor %}
 
         {% else %}
         {% for user in RankList %}
@@ -194,6 +238,10 @@
           <input type='button' value='Ranking 갱신하기(20초 정도 소요)'
           style="width:280px; height:50px" onclick='UpdateFrRank()'>
       {% endif %}
+      {% if type|int == 7 %}
+          <input type='button' value='Ranking 갱신하기(20초 정도 소요)'
+          style="width:280px; height:50px" onclick='UpdateFr18LvRank()'>
+      {% endif %}
   </div>
   {% endif %}
 <br/>
@@ -205,6 +253,10 @@
  function UpdateFrRank(){
   alert('갱신 시작');
   location.href="{{url_for('FirstRankUpdate')}}";
+ }
+ function UpdateFr18LvRank(){
+  alert('갱신 시작');
+  location.href="{{url_for('First18LvRankUpdate')}}";
  }
  function LevelSelect(typ){
     var SelectedLevel = document.getElementById("LevelSelect");

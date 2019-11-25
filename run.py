@@ -4,8 +4,9 @@ from time import sleep
 from flask import Flask, render_template, current_app, g, request, redirect, url_for
 import sqlite3
 from UserUpdate import UserUpdateProc, TrackRendering, PUCTrackRendering
-from UserRankingUpdate import UpdateRanking, UpdateFirstRanking
+from UserRankingUpdate import UpdateRanking, UpdateFirstRanking, UpdateFirst18LvRanking
 import urllib.parse
+from datetime import datetime, timedelta
 
 
 app = Flask(__name__, static_url_path='/static')
@@ -249,6 +250,8 @@ def UserRanking():
         RankList = EvalAvgRankList(level)
     elif typ == '6':
         RankList = EvalRankList('VolForce')
+    elif typ == '7':
+        RankList = EvalRankList('First18LvCount')
     return render_template('UserRanking.html', RankList=RankList, type=typ, level=level)
 
 def EvalAvgRankList(Avglv):
@@ -257,7 +260,7 @@ def EvalAvgRankList(Avglv):
     RankList = []
     if int(Avglv) is 0:
         return RankList
-    sql = "select UserNumber, Average, Count from AvgData where Level=?;"
+    sql = "select UserNumber, Average, Count, Sum from AvgData where Level=?;"
     cur.execute(sql, (Avglv,))
     AvgList = cur.fetchall()
 
@@ -265,7 +268,7 @@ def EvalAvgRankList(Avglv):
     sql = "select UserName from UserInfo where UserNumber=?;"
     cur.execute(sql, (sortedList[0][0],))
     UserName = cur.fetchone()[0]
-    RankList.append((1, UserName, sortedList[0][1], sortedList[0][2]))
+    RankList.append((1, UserName, sortedList[0][1], sortedList[0][2], sortedList[0][3]))
 
     prevRank = 1
     prevUser = sortedList[0][1]
@@ -274,11 +277,11 @@ def EvalAvgRankList(Avglv):
         cur.execute(sql, (user[0],))
         UserName = cur.fetchone()[0]
         if prevUser == user[1]:
-            RankList.append((prevRank, UserName, user[1], user[2]))
+            RankList.append((prevRank, UserName, user[1], user[2], user[3]))
         else:
             prevRank = rnk + 2
             prevUser = user[1]
-            RankList.append((prevRank, UserName, user[1], user[2]))
+            RankList.append((prevRank, UserName, user[1], user[2], user[3]))
     return RankList
 
 def EvalRankList(rankfactor):
@@ -306,6 +309,11 @@ def EvalRankList(rankfactor):
 def FirstRankUpdate():
     UpdateFirstRanking()
     return redirect(url_for('UserRanking', type = '3'))
+
+@app.route('/FirstRank18LvUpdate')
+def First18LvRankUpdate():
+    UpdateFirst18LvRanking()
+    return redirect(url_for('UserRanking', type = '7'))
 
 @app.route('/UserInfoUpdate')
 def UserInfoUpdate():
@@ -364,8 +372,18 @@ def UserUpdateProcess():
     updateuser = request.args.get('user')
     UserUpdateProc(updateuser)
     UpdateRanking(updateuser)
+    UpdateRecentTime(updateuser)
     LoadingProc = "Finished!!"
     return render_template('UserUpdateFin.html', updateuser=updateuser, LoadingProc=LoadingProc)
+
+def UpdateRecentTime(updateuser):
+    conn = sqlite3.connect("SDVXRanking.db")
+    cur = conn.cursor()
+    CurrentTime = (datetime.now()+timedelta(hours=9)).strftime('%Y-%m-%d %H:%M:%S')
+    sql = "update UserInfo SET RecentUpdateTime = ? where UserID = ?;"
+    cur.execute(sql, (CurrentTime, updateuser))
+    conn.commit()
+    conn.close()
 
 @app.route('/About',methods = ['GET'])
 def About():

@@ -7,7 +7,7 @@ import sqlite3
 login_info = {'id': 'osuplayer', 'pw': 'osunumber1'}
 user_list = ['howlingsoul', 'hansolr', 'eden', 'eseiker', 'rkn04', 'wmr04219', 'eric9709', 'haze0618',
 	'skrea1492', 'pursefire', 'cloud', 'raison0215', 'reica', 'hoxy', 'chyo259', '60fail', 'nalch147',
-	'pxero', 'gks2476']
+	'pxero', 'gks2476','sk443123','min3492']
 
 def volforce_user(username):
 	if username not in user_list:
