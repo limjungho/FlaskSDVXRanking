@@ -18,8 +18,9 @@
         <td><div onclick="RankingType('6')">볼포스 Ranking</div></td>
       </tr>
       <tr>
-        <td></td>
-        <td><div style="background: #FF0000;" onclick="RankingType('7')">18렙 大전투시대</div></td>
+        <td><div style="background: #FF0000;" onclick="RankingType('7')">17렙 大전투시대</div></td>
+        <td><div style="background: #FF0000;" onclick="RankingType('8')">18렙 大전투시대</div></td>
+        <td><div style="background: #FF0000;" onclick="RankingType('9')">19렙 大전투시대</div></td>
       </tr>
     </table>
     {% if type|int==4 or type|int==5 %}
@@ -53,14 +54,18 @@
   {% elif type|int==6 %}
   <h2>볼포스 Ranking</h2>
   {% elif type|int==7 %}
+  <h2>17렙 大전투시대 (1등 횟수)</h2>
+  {% elif type|int==8 %}
   <h2>18렙 大전투시대 (1등 횟수)</h2>
+  {% elif type|int==9 %}
+  <h2>19렙 大전투시대 (1등 횟수)</h2>
   {% endif %}
   </div>
   <div align="center" class="UserRankingTable">
       <table>
         <th>Rank</th>
         <th>SDVX NickName</th>
-        {% if type|int == 3 or type|int == 7%}
+        {% if type|int == 3 or (type|int >= 7 and type|int <= 9) %}
         <th>1위 횟수</th>
         {% elif type|int == 4 %}
         <th>평균</th>
@@ -169,37 +174,31 @@
           {% endif %}
           {% endfor %}
 
-        {% elif type|int == 7 %}
+        {% elif type|int >= 7 and type|int <=9 %}
             {% for user in RankList %}
             {% if user[0]==1 %}
-            <tr style="background-color: #808080">
-                <td class="first">SOL</td>
-                <td class="first">{{user[1]}}</td>
-                <td class="first">{{user[2]}}</td>
-            </tr>
-            {% elif user[0]==2 %}
             <tr>
               <td><img src="{{url_for('static',filename='img/GradeCompleteImg/first.png')}}"></td>
                   <td class="second">{{user[1]}}</td>
-                  <td class="second">{{user[2]}}</td>
+                  <td class="second"><a href="{{url_for('UserFirstRankList',user=user[1],type=type)}}">{{user[2]}}</a></td>
             </tr>
-            {% elif user[0]==3 %}
+            {% elif user[0]==2 %}
             <tr>
               <td><img src="{{url_for('static',filename='img/GradeCompleteImg/second.png')}}"></td>
                   <td class="third">{{user[1]}}</td>
-                  <td class="third">{{user[2]}}</td>
+                  <td class="third"><a href="{{url_for('UserFirstRankList',user=user[1],type=type)}}">{{user[2]}}</a></td>
             </tr>
-            {% elif user[0]==4 %}
+            {% elif user[0]==3 %}
             <tr>
               <td><img src="{{url_for('static',filename='img/GradeCompleteImg/third.png')}}"></td>
                   <td class="third">{{user[1]}}</td>
-                  <td class="third">{{user[2]}}</td>
+                  <td class="third"><a href="{{url_for('UserFirstRankList',user=user[1],type=type)}}">{{user[2]}}</a></td>
             </tr>
           {% else %}
           <tr>
               <td>{{user[0]}}</td>
               <td>{{user[1]}}</td>
-              <td>{{user[2]}}</td>
+              <td><a href="{{url_for('UserFirstRankList',user=user[1],type=type)}}">{{user[2]}}</a></td>
           </tr>
         {% endif %}
         {% endfor %}
@@ -238,9 +237,9 @@
           <input type='button' value='Ranking 갱신하기(20초 정도 소요)'
           style="width:280px; height:50px" onclick='UpdateFrRank()'>
       {% endif %}
-      {% if type|int == 7 %}
+      {% if type|int >= 7 and type|int <= 9 %}
           <input type='button' value='Ranking 갱신하기(20초 정도 소요)'
-          style="width:280px; height:50px" onclick='UpdateFr18LvRank()'>
+          style="width:280px; height:50px" onclick='UpdateFrLvRank({{type|int + 10}})'>
       {% endif %}
   </div>
   {% endif %}
@@ -254,9 +253,9 @@
   alert('갱신 시작');
   location.href="{{url_for('FirstRankUpdate')}}";
  }
- function UpdateFr18LvRank(){
+ function UpdateFrLvRank(level){
   alert('갱신 시작');
-  location.href="{{url_for('First18LvRankUpdate')}}";
+  location.href='/FirstLvRankUpdate?type='+String(Number(level)-10);
  }
  function LevelSelect(typ){
     var SelectedLevel = document.getElementById("LevelSelect");
