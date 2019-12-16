@@ -1,0 +1,89 @@
+{% extends 'layout.html' %}
+ 
+{% block content %}
+
+<div>
+      <h1 style="margin-left:10px;">FristRank List - {{userName}}</h1>
+
+      </div>
+      {% for Track in PageTrack %}
+      <table class="TrackBox">
+        <tr>
+          {% if Track[4] != 'EXH' %}
+          <td class="ImgBox" rowspan='2'><img class="img" src="{{url_for('static',filename='img/Jacket/'+(((Track[3]|int)-1000)|string).zfill(4)+Track[4][0].lower()+'.jpg')}}"></td>
+          {% else %}
+          <td class="ImgBox" rowspan='2'><img class="img" src="{{url_for('static',filename='img/Jacket/'+(((Track[3]|int)-1000)|string).zfill(4)+'e.jpg')}}"></td>
+          {% endif %}
+          <td class="TitleBox" colspan='4'>
+            {% if Track[0]|length > 27 %}
+            <div id="TrackTitle">{{Track[0][:27]}}...</div>
+            {% else %}
+            <div id="TrackTitle">{{Track[0]}}</div>
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          {% if Track[1] != '??' %}
+            <td class="DiffBoxEXH1"><div id="rcornersEXH1" 
+              onclick="RankingSelect({{Track[3]}},'EXH')">
+            {% if Track[1]|length == 1 %}
+            EXH Lv.{{Track[1]}}&nbsp;
+            {% else %}
+            EXH Lv.{{Track[1]}}
+            {% endif %}
+            </div></td>
+            <td class="DiffBoxEXH2"><div id="rcornersEXH2" 
+              onclick="RankingSelect({{Track[3]}},'EXH')">{{Track[5]}}</div></td>
+            {% endif %}
+            {% if Track[2] != '??' %}
+            <td class="DiffBoxMXM2"><div id="rcorners{{Track[4]}}2" 
+              onclick="RankingSelect({{Track[3]}},'{{Track[4]}}')">{{Track[6]}}</div></td>
+            <td class="DiffBoxMXM1"><div id="rcorners{{Track[4]}}1" 
+              onclick="RankingSelect({{Track[3]}},'{{Track[4]}}')">{{Track[4]}} Lv.{{Track[2]}}</div></td>
+          {% endif %}
+        </tr>
+      </table>
+      <br/>
+      {% endfor %}
+
+<br/>
+
+<div class="pagination">
+    {% for i in AllTrack %}
+     {% if loop.index|int == page|int %}
+    <a href='{{url_for("UserFirstRankList", user=userName, page=loop.index, type=type)}}' class="active">{{loop.index}}</a>
+    {% else %}
+    <a href='{{url_for("UserFirstRankList", user=userName, page=loop.index, type=type)}}'>{{loop.index}}</a>
+    {% endif %}
+    {% endfor %}
+</div>
+
+<script>
+  function SearchClick() {
+    var searchtext = document.getElementById("title").value
+    //alert(encodeURIComponent(searchtext));
+   location.href='/TrackTitleSearch?title='+encodeURIComponent(searchtext);
+ }
+ function LevelSelect(){
+    var SelectedLevel = document.getElementById("LevelSelect");
+    var SelectedText = SelectedLevel.options[SelectedLevel.selectedIndex].value;
+    location.href='/TrackLevelSearch?level='+SelectedText.substr(3,);
+ }
+ function RankingSelect(tid, diff){
+    location.href="/RankingPage?tid="+tid+"&diff="+diff;
+ }
+
+  var input = document.getElementById("title");
+  input.addEventListener("keyup", function(event) {
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+      // Cancel the default action, if needed
+      event.preventDefault();
+      // Trigger the button element with a click
+      document.getElementById("searchtitle").click();
+    }
+  });
+
+</script>
+
+{% endblock %}
