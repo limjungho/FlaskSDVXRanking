@@ -103,11 +103,14 @@ def UpdateFirstRanking():
     conn.close()
 
 
-def UpdateFirst18LvRanking():
+def UpdateFirstLvRanking(lv):
     DiffList = ['EXH', 'MXM', 'INF', 'GRV', 'HVN', 'VVD']
 
     conn = sqlite3.connect("SDVXRanking.db")
     cur = conn.cursor()
+
+    sql = "DELETE from FirstRankList WHERE Level = ?;"
+    cur.execute(sql,(lv,))
 
     sql = "select UserNumber from UserInfo;"
     cur.execute(sql)
@@ -118,15 +121,16 @@ def UpdateFirst18LvRanking():
     cur.execute(sql)
     TrackList = cur.fetchall()
     FirstRankList = [0] * (UserCount + 1)
+    FirstRankTIDList = [[]] * (UserCount + 1)
     for tidtup in TrackList:
         tid = tidtup[0]
         for diff in DiffList:
             sql = "select "+diff+" from TrackList where TrackID = ?;"
             cur.execute(sql, (tid, ))
-            chDiff18 = cur.fetchone()
-            if not chDiff18[0]:
+            chDifflv = cur.fetchone()
+            if not chDifflv[0]:
                 continue
-            if int(chDiff18[0]) != 18:
+            if int(chDifflv[0]) != int(lv):
                 continue
 
             topList = []
@@ -144,12 +148,19 @@ def UpdateFirst18LvRanking():
                     break
             for user in topList:
                 FirstRankList[int(user)] = FirstRankList[int(user)] + 1
+                sql = "INSERT INTO FirstRankList VALUES(?,?,?,?);"
+                cur.execute(sql, (int(user), tid, lv, diff))
+
+    FirstLvCount = 'First'+str(lv)+'LvCount';
     for i, firstcount in enumerate(FirstRankList[1:]):
-        sql = "update UserInfo SET First18LvCount=? where UserNumber=?;"
+        sql = "update UserInfo SET "+FirstLvCount+"=? where UserNumber=?;"
         cur.execute(sql, (firstcount, i + 1))
+
 
     conn.commit()
     conn.close()
+
+
 
 '''
 conn = sqlite3.connect("SDVXRanking.db")

@@ -4,7 +4,7 @@ from time import sleep
 from flask import Flask, render_template, current_app, g, request, redirect, url_for
 import sqlite3
 from UserUpdate import UserUpdateProc, TrackRendering, PUCTrackRendering
-from UserRankingUpdate import UpdateRanking, UpdateFirstRanking, UpdateFirst18LvRanking
+from UserRankingUpdate import UpdateRanking, UpdateFirstRanking, UpdateFirstLvRanking
 import urllib.parse
 from datetime import datetime, timedelta
 
@@ -251,7 +251,11 @@ def UserRanking():
     elif typ == '6':
         RankList = EvalRankList('VolForce')
     elif typ == '7':
+        RankList = EvalRankList('First17LvCount')
+    elif typ == '8':
         RankList = EvalRankList('First18LvCount')
+    elif typ == '9':
+        RankList = EvalRankList('First19LvCount')
     return render_template('UserRanking.html', RankList=RankList, type=typ, level=level)
 
 def EvalAvgRankList(Avglv):
@@ -310,10 +314,11 @@ def FirstRankUpdate():
     UpdateFirstRanking()
     return redirect(url_for('UserRanking', type = '3'))
 
-@app.route('/FirstRank18LvUpdate')
-def First18LvRankUpdate():
-    UpdateFirst18LvRanking()
-    return redirect(url_for('UserRanking', type = '7'))
+@app.route('/FirstLvRankUpdate', methods = ['GET'])
+def FirstLvRankUpdate():
+    typ = request.args.get('type')
+    UpdateFirstLvRanking(int(typ)+10)
+    return redirect(url_for('UserRanking', type = typ))
 
 @app.route('/UserInfoUpdate')
 def UserInfoUpdate():
@@ -360,6 +365,39 @@ def UserPUCList():
     conn.close()
     newPUCList =  PUCTrackRendering(newPUCList,user)
     return render_template('UserPUCList.html', AllTrack=AllTrack, userName=user,PageTrack=newPUCList, page=page)
+
+@app.route('/UserFirstRankList', methods = ['GET'])
+def UserFirstRankList():
+    conn = sqlite3.connect("SDVXRanking.db")
+    cur = conn.cursor()
+
+    ViewPageLen = 40
+    user = request.args.get('user')
+    page = request.args.get('page')
+    typ = request.args.get('type')
+    if page == None:
+        page = 1
+    page = int(page)
+
+    sql = "select UserNumber from UserInfo where UserName = ?;"
+    cur.execute(sql,(user,))
+    UserNum = cur.fetchone()[0]
+
+    sql = """select TrackID, Diff from FirstRankList where UserNumber=? and Level=?"""
+    cur.execute(sql,(UserNum,str(int(typ)+10)))
+    FirstRankList = cur.fetchall()
+    TrackLen = int((len(FirstRankList) + ViewPageLen - 1) / ViewPageLen)
+    AllTrack = range(0, TrackLen)
+
+    FirstRankList = FirstRankList[ViewPageLen*(page-1):ViewPageLen*page]
+    newPUCList = []
+    for track in FirstRankList:
+        sql = "select * from TrackList where TrackID = ?;"
+        cur.execute(sql, (track[0],))
+        newPUCList.append(cur.fetchone()+(track[1],))
+    conn.close()
+    newPUCList =  PUCTrackRendering(newPUCList,user)
+    return render_template('UserFirstRankList.html', AllTrack=AllTrack, userName=user,PageTrack=newPUCList, page=page, type=typ)
 
 @app.route('/UserUpdate',methods = ['GET'])
 def UserUpdate():
