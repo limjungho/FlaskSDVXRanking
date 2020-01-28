@@ -3,7 +3,7 @@ from time import sleep
 imgurl = 'http://anzuinfo.me/images/track_img/'
 savedir = 'static/img/Jacket/'
 imgchrList = ['n','a','e','m','i','g','h','v']
-for i in range(1448,1449):
+for i in range(1462,1465):
     if i%20==0:
         print('Loading...'+str(i))
     for chr in imgchrList:
